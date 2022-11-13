@@ -1,0 +1,19 @@
+.footer{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menuList{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  li+li{
+    margin-left: 32px;
+  }
+  li{
+    cursor: pointer;
+  }
+}

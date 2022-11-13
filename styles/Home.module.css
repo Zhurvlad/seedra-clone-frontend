@@ -1,3 +1,4 @@
+/*
 .container {
   padding: 0 2rem;
 }
@@ -14,11 +15,12 @@
 
 .footer {
   display: flex;
+  align-items: flex-end;
   flex: 1;
   padding: 2rem 0;
   border-top: 1px solid #eaeaea;
   justify-content: center;
-  align-items: center;
+
 }
 
 .footer a {
@@ -127,3 +129,10 @@
     filter: invert(1);
   }
 }
+*/
+
+.footer {
+    flex: 0 0 auto;
+}
+
+

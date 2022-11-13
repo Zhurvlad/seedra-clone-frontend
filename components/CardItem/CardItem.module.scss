@@ -1,0 +1,77 @@
+.card{
+  max-height: 512px;
+  width: 350px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 30px;
+  grid-row-gap: 30px;
+
+}
+
+.cardItem{
+ width: 350px;
+  border: 2px solid #EFEFEF;
+  border-radius: 8px;
+  position: relative;
+  padding: 28px 28px 24px 28px;
+
+}
+
+.img{
+  margin-bottom: 24px;
+}
+
+.heart{
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  cursor: pointer;
+}
+
+.rating{
+  display: flex;
+  align-items: center;
+  height: 33px;
+  margin-bottom: 5px;
+
+  p{
+    margin-left: 13px;
+  }
+  img{
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.text{
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.price{
+  font-weight: 600;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.priceCart{
+  border: 1px solid #EFEFEF;
+  border-radius: 8px;
+  padding: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.7s;
+
+  &:hover{
+    background-color: #EFEFEF;
+  }
+}
