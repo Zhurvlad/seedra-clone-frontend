@@ -1,7 +1,6 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
+
   font-family: 'Lexend', sans-serif;
   font-size: 14px;
   font-weight: 400;
@@ -15,25 +14,22 @@ a {
 
 * {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
+
+
 
 ul, li{
   list-style: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
 }
 
 .container{
   width: 1140px;
   margin: 0 auto;
   padding: 0 15px;
-
+  height: 100vh;
 }
+
+
+

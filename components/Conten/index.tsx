@@ -13,6 +13,8 @@ const availableCategory = [
 ]
 
 export const Content: React.FC = () => {
+    const [activeCategory, setActiveCategory] = React.useState(false)
+
     return (
         <div className={styles.content}>
             <div className={styles.header}>
@@ -23,7 +25,7 @@ export const Content: React.FC = () => {
             </div>
             <div className={styles.category}>
                 {availableCategory.map((obj => (
-                    <ul className={styles.categoryItem}>
+                    <ul onClick={() => setActiveCategory(!activeCategory)} key={obj.name} className={activeCategory ? styles.activeCategoryItem : styles.categoryItem}>
                         <img src={obj.url} alt={obj.name}/>
                         <li>{obj.name}</li>
                     </ul>

@@ -1,0 +1,21 @@
+.windowCartCount{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #EFEFEF;
+  border-radius: 11px;
+  height: 44px;
+  width: 104px;
+  padding: 14px 10px;
+
+  p{
+    color: #359740;
+    background: rgba(53, 151, 64, 0.08);
+    border-radius: 6px;
+    padding: 5px 10px;
+
+  }
+  img{
+    cursor: pointer;
+  }
+}

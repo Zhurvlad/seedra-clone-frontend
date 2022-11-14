@@ -4,23 +4,46 @@ import styles from "./Footer.module.scss";
 export const Footer = () => {
     return (
         <div className={styles.footer}>
-            <nav className={styles.menu}>
-                <ul className={styles.menuList}>
-                    <li>ALL PRODUCTS</li>
-                    <li>ABOUT SEEDRA</li>
-                    <li>OUR BLOG</li>
+            <div className={styles.footerTop}>
+                <nav className={styles.menu}>
+                    <ul className={styles.menuList}>
+                        <li className={styles.mr}>
+                            <a href="">ALL PRODUCTS</a>
+                        </li>
+                        <li className={styles.mr}>
+                            <a href="">ABOUT SEEDRA</a>
+                        </li>
+                        <li>
+                            <a href="">OUR BLOG</a>
+                        </li>
 
-                </ul>
-            </nav>
-            <div className={styles.headerLogo}>
-                <img src='headerIcon/mainLogo.svg' alt="Logo"/>
+                    </ul>
+                </nav>
+                <div className={styles.headerLogo}>
+                    <img src='headerIcon/mainLogo.svg' alt="Logo"/>
+                </div>
+                <nav className={styles.menu}>
+                    <ul className={styles.menuList}>
+                        <li className={styles.mr}>
+                            <a href="">Terms&Conditions</a>
+                        </li>
+                        <li >
+                            <a href="">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-            <nav className={styles.menu}>
-                <ul className={styles.menuList}>
-                    <li>Terms&Conditions</li>
-                    <li>Privacy Policy</li>
-                </ul>
-            </nav>
+            <div className={styles.footerBot}>
+                <li className={styles.headerSocial}>
+                    <img src="headerIcon/facebookGreen.svg" alt="search"/>
+                    <img src="headerIcon/instaGreen.svg" alt="search"/>
+                </li>
+                <div className={styles.copyright}>
+                    <div >
+                        <p>All rights reserved</p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

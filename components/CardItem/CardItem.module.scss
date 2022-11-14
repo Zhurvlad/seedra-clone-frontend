@@ -59,6 +59,8 @@
 }
 
 .priceCart{
+  /*background-image:
+          url('/public/headerIcon/cartSimple.svg');*/
   border: 1px solid #EFEFEF;
   border-radius: 8px;
   padding: 12px;
@@ -69,9 +71,30 @@
   justify-content: center;
   cursor: pointer;
   background-color: transparent;
-  transition: background-color 0.7s;
+  transition: all 0.7s;
 
   &:hover{
-    background-color: #EFEFEF;
+    background-color: rgba(53, 151, 64, 0.08);
   }
+}
+
+.active{
+ /* background-image:
+          url('/public/headerIcon/whiteCart.svg');*/
+  background-color: #359740;
+  border: 1px solid #359740;
+  border-radius: 8px;
+  padding: 12px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.7s;
+
+  img{
+    transform: translateY(4px);
+  }
+
 }
