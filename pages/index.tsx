@@ -5,7 +5,9 @@ import TabLogoSVG from '/headerIcon/tabLogo.svg'
 import {Header} from "../components/Header";
 import {Content} from "../components/Conten";
 import {Footer} from "../components/Footer";
-import {Cart} from "../components/Cart";
+import Cart from "./cart";
+
+
 
 export default function Home() {
     return (
@@ -27,8 +29,9 @@ export default function Home() {
                 <div className={'container'}>
                     <main className={styles.main}>
                         <Header/>
-                       {/* <Content/>*/}
-                       <Cart/>
+                        <Content/>
+                      {/* <Cart/>*/}
+                    {/* <Cart/>*/}
                     </main>
                     <footer className={styles.footer}>
                         <Footer/>

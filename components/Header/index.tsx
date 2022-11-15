@@ -1,17 +1,55 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import styles from './Header.module.scss'
 import {Count} from "../Count";
 import {CartItemComponent} from "../CartItemComponent";
+import Link from "next/link";
+import {useRouter} from "next/router";
 
 export const Header: React.FC = () => {
-    const [notNullCart, setNotNullCart] = React.useState(false)
+    const [notNullCart, setNotNullCart] = React.useState(true)
     const [notNullFavorite, setNotNullFavorite] = React.useState(false)
+    const [visibleWindowCart, setVisibleWindowCart] = React.useState(false)
+    const cartRef = useRef<HTMLDivElement>(null)
+    const cartRoute = useRouter()
+
+    const onClosePopupCart = () => {
+        setVisibleWindowCart(!visibleWindowCart)
+    }
+
+    console.log(cartRoute.pathname)
+
+    const onVisibleWindowCart = () => {
+        if(cartRoute.pathname !== '/cart') {
+            setVisibleWindowCart(true)
+        }
+    }
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            //Типизация скрытия попапаесли клик был произведён вне области попапа
+            const _event = event as MouseEvent & {
+                path: Node[]
+            }
+            if(cartRef.current && !_event.path.includes(cartRef.current)){
+                setVisibleWindowCart(false)
+            }
+        }
+        document.body.addEventListener('click',handleClickOutside )
+
+        //Удаляем листенер при переходе на другую страницу
+        return () => {
+            document.body.removeEventListener('click', handleClickOutside)
+        }
+    }, [])
+
 
     return (
         <div className={styles.header}>
             <div className={styles.headerTop}>
                 <div className={styles.headerLogo}>
-                    <img src='headerIcon/mainLogo.svg' alt="Logo"/>
+                    <Link href={'/'}>
+                        <img src='headerIcon/mainLogo.svg' alt="Logo"/>
+                    </Link>
                 </div>
                 <nav className={styles.menu}>
                     <ul className={styles.menuList}>
@@ -42,21 +80,24 @@ export const Header: React.FC = () => {
                         <img onClick={() => setNotNullFavorite(!notNullFavorite)}
                              src={notNullFavorite ? 'headerIcon/addedHeart.svg' : "headerIcon/nullFavorite.svg"}
                              alt="search"/>
-                        <img onClick={() => setNotNullCart(!notNullCart)} className={styles.headerCart}
-                             src={notNullCart ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"} alt="search"/>
+                        <Link href={'/cart'}>
+                            <img ref={cartRef} onMouseEnter={onVisibleWindowCart}  className={styles.headerCart}
+                                 src={notNullCart ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"} alt="search"/>
+                        </Link>
                     </li>
                 </div>
-                {notNullCart &&
-                <div className={styles.windowCart}>
-                    <img className={styles.closed} src="headerIcon/closed.svg" alt="closed"/>
+                {visibleWindowCart && notNullCart &&
+                <div ref={cartRef} className={styles.windowCart}>
+                    <img onClick={onClosePopupCart} className={styles.closed} src="headerIcon/closed.svg" alt="closed"/>
                     <div className={styles.windowItems}>
                         <div className={styles.windowCartItem}>
-                            <CartItemComponent>
-                                <div className={styles.price}>
-                                    <p className={styles.pack}>1 pack</p>
-                                    <p className={styles.priceText}>$24.56</p>
-                                </div>
-                            </CartItemComponent>
+                                <CartItemComponent >
+                                    <div className={styles.price}>
+                                        <p className={styles.pack}>1 pack</p>
+                                        <p className={styles.priceText}>$24.56</p>
+                                    </div>
+                                </CartItemComponent>
+
                             <Count/>
                         </div>
                     </div>
