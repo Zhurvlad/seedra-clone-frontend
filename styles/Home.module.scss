@@ -149,18 +149,15 @@
 }
 
 .boxshadowTop{
-    box-shadow: 0px 4px 12px rgba(207, 207, 207, 0.25);
-    width: 100vw;
-    height: 72px;
-    margin: 0 auto;
+    top: 0;
+    box-shadow: 0px 4px 12px rgb(207 207 207 / 25%);
+    position: relative;
+    z-index: 61;
 
 }
 
 .boxshadowBottom{
-    height: 172px;
-    width: 100vw;
-    margin: 0 auto;
-    box-shadow: 0px -7px 80px rgba(189, 189, 189, 0.25);
-    position: absolute;
-    bottom: 0;
+    box-shadow: 0px 4px 12px rgb(207 207 207 / 25%);
+    position: relative;
+    z-index: 61;
 }

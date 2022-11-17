@@ -1,19 +1,54 @@
 import React from 'react';
 import styles from './Content.module.scss'
 import {CardItem} from "../CardItem";
+import {availableCategory, Category} from "../Category";
+import axios from "axios";
+import {IItems} from "../../models/IItems";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
+import {ItemsApi} from "../../pages/api/items";
+import {itemsSelectors, setItems} from "../../redux/itemsSlice";
 
-const availableCategory = [
-    {name: 'All', url: 'headerIcon/treeLeaf.svg'},
-    {name: 'BUNDLES', url: 'headerIcon/bread.svg'},
-    {name: 'HERBS', url: 'headerIcon/oakLeaf.svg'},
-    {name: 'VEGETABLES', url: 'headerIcon/potato.svg'},
-    {name: 'FRUITS', url: 'headerIcon/strawsberry.svg'},
-    {name: 'SUPPLIES', url: 'headerIcon/tableware.svg'},
-    {name: 'FLOWERS', url: 'headerIcon/flower.svg'}
-]
+type ContentProps = {
+    items: IItems[]
+}
 
-export const Content: React.FC = () => {
-    const [activeCategory, setActiveCategory] = React.useState(false)
+
+export const Content: React.FC<ContentProps> = ({items}) => {
+    const [activeCategory, setActiveCategory] = React.useState(0)
+    const {data} = useAppSelector(itemsSelectors)
+
+
+    /*const [items, setItems] = React.useState([])
+
+    React.useEffect(() => {
+        (async () => {
+            const {data} = await axios.get('http://localhost:8888/items')
+            setItems(data)
+        })()
+
+    }, [])
+*/
+   /* console.log(items.map((obj, i) => console.log(obj)), 999)
+*/
+
+    const dispatch =  useAppDispatch()
+
+
+
+
+    React.useEffect(() => {
+        (async () => {
+
+            try{
+                const {items} = await ItemsApi().search({
+                    type: availableCategory[activeCategory].name
+                })
+                dispatch(setItems(items))
+            } catch (e) {
+                console.log(e)
+            }
+        })()
+    }, [activeCategory])
 
     return (
         <div className={styles.content}>
@@ -23,16 +58,11 @@ export const Content: React.FC = () => {
                     View all (12)
                 </button>
             </div>
-            <div className={styles.category}>
-                {availableCategory.map((obj => (
-                    <ul onClick={() => setActiveCategory(!activeCategory)} key={obj.name} className={activeCategory ? styles.activeCategoryItem : styles.categoryItem}>
-                        <img src={obj.url} alt={obj.name}/>
-                        <li>{obj.name}</li>
-                    </ul>
-                )))}
-            </div>
-            <div>
-                <CardItem/>
+            <Category setActiveCategory={setActiveCategory} activeCategory={activeCategory}/>
+            <div className={styles.cartItem}>
+                {(activeCategory !== 0 ? data :  items).map((obj, i) => <CardItem id={obj.id} title={obj.title} imageUrl={obj.imageUrl} price={obj.price}
+                                                 key={obj.id}/>)}
+
             </div>
         </div>
     );
