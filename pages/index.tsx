@@ -3,18 +3,16 @@ import styles from '../styles/Home.module.scss'
 import {Header} from "../components/Header";
 import {Content} from "../components/Conten";
 import {GetServerSideProps, NextPage} from "next";
-import {IItemsDto} from "./api/types";
+import {IDataDto, IItemsDto} from "./api/types";
 import {ItemsApi} from "./api/items";
 import {wrapper} from "../redux/store";
 import {setItems} from '../redux/itemsSlice';
 
 interface HomeProps {
-    items: IItemsDto[]
+    items: IDataDto
 }
 
 const Home: NextPage<HomeProps> = ({items}) => {
-    console.log(items, 1110)
-
     return (
 
 
@@ -37,7 +35,7 @@ const Home: NextPage<HomeProps> = ({items}) => {
 
                         <Header/>
 
-                        <Content items={items}/>
+                        <Content meta={items.meta} items={items.items}/>
                         {/* <Cart/>*/}
                         {/* <Cart/>*/}
                     </main>
@@ -45,9 +43,10 @@ const Home: NextPage<HomeProps> = ({items}) => {
                         <Footer/>
                     </footer>*/}
                 </div>
-            </div>
 
+            </div>
         </div>
+
     )
 }
 

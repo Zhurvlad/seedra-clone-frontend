@@ -37,6 +37,27 @@
   grid-column-gap: 30px;
   grid-row-gap: 30px;
   display: grid;
+}
+.pagination{
+  margin: 50px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 18px;
 
+  li{
+    margin: 0 10px;
+    transition: color 0.5s;
 
+    &:hover{
+      color: #359740;
+    }
+
+  }
+
+  img{
+    transform: translateY(3px);
+    cursor: pointer;
+  }
 }
