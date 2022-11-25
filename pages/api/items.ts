@@ -1,5 +1,5 @@
 import axios from "axios";
-import {IDataDto, IItemsDto} from "./types";
+import {IAddItems, IDataDto, IItemsDto} from "./types";
 
 export class SearchItemsDto {
     title?: string;
@@ -35,6 +35,10 @@ export const ItemsApi = () => (
          }*/
         async search(query: SearchItemsDto) {
             const {data} = await instance.get<{ items: IItemsDto[] }>(`/items/search`, {params: query})
+            return data
+        },
+        async addProduct(dto: IAddItems) {
+            const {data} = await instance.post<IAddItems>(`/items`, dto)
             return data
         },
     }

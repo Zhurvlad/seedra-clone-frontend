@@ -7,6 +7,13 @@ import {useRouter} from "next/router";
 import {IItems} from "../../models/IItems";
 import {ItemsApi} from "../../pages/api/items";
 import debounce from 'lodash.debounce';
+import {useForm, UseFormSetError} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {LoginSchema} from "../../utils/validation";
+import {Main} from "../Authorization/form/Main";
+import {Login} from "../Authorization/form/Login";
+import {Register} from "../Authorization/form/Register";
+import {LoadingProduct} from "../LoadingProduct";
 
 
 export const Header: React.FC = () => {
@@ -17,6 +24,10 @@ export const Header: React.FC = () => {
     const [items, setItems] = React.useState<IItems[]>([])
     const [searchValue, setSearchValue] = React.useState<string>('')
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [login, setLogin] = React.useState(false)
+    const [onLogin, setOnLogin] = React.useState('')
+    const [admin, setAdmin] = React.useState(false)
+
 
 
     const cartRef = useRef<HTMLImageElement>(null)
@@ -64,7 +75,7 @@ export const Header: React.FC = () => {
             // @ts-ignore
             setItems(items)
             if (!inputValue) return setActive(false)
-            if(inputValue) return setActive(true)
+            if (inputValue) return setActive(true)
         } catch (e) {
             console.log(e)
         } finally {
@@ -87,7 +98,7 @@ export const Header: React.FC = () => {
                         <img src='headerIcon/mainLogo.svg' alt="Logo"/>
                     </Link>
                 </div>
-                <nav className={styles.menu}>
+                {/* <nav className={styles.menu}>
                     <ul className={styles.menuList}>
                         <li>
                             <a href="">ALL PRODUCTS</a>
@@ -102,12 +113,12 @@ export const Header: React.FC = () => {
                             <a href="">CONTACTS</a>
                         </li>
                     </ul>
-                </nav>
+                </nav>*/}
                 <div className={styles.headerRight}>
-                    <li className={styles.headerSocial}>
+                    {/* <li className={styles.headerSocial}>
                         <img src="headerIcon/facebook.svg" alt="search"/>
                         <img src="headerIcon/instagram.svg" alt="search"/>
-                    </li>
+                    </li>*/}
                     <div ref={searchRef} className={[styles.headerSearch, active && styles.searchActive].join(' ')}>
                         <input value={searchValue}
                                onChange={(e) => onDebounce(e)}
@@ -119,31 +130,49 @@ export const Header: React.FC = () => {
                         <img className={styles.loading} src="https://seedra.us/wp-content/uploads/2021/12/spinner.gif"
                              alt="Loading"/>}
 
-
                         <div className={[styles.searchList, active && styles.searchListActive].join(' ')}>
                             {items.length ? items.map((obj, i) => (
-                                //Тут надо сделать линк
-                                <div>
-                                    <img src={obj.imageUrl} alt="Img"/>
-                                    <p>{searchValue && obj.title}</p>
-                                </div>
-                            ))
-                            :
-                            <h6>Nothing found</h6>
+                                    //Тут надо сделать линк
+                                    <div>
+                                        <img src={obj.imageUrl} alt="Img"/>
+                                        <p>{searchValue && obj.title}</p>
+                                    </div>
+                                ))
+                                :
+                                <h6>Nothing found</h6>
                             }
                         </div>
                     </div>
-                    <li className={styles.headerCartFav}>
-                        <img onClick={() => setNotNullFavorite(!notNullFavorite)}
-                             src={notNullFavorite ? 'headerIcon/addedHeart.svg' : "headerIcon/nullFavorite.svg"}
-                             alt="search"/>
-                        <Link href={'/cart'}>
-                            <img ref={cartRef} onMouseEnter={onVisibleWindowCart} className={styles.headerCart}
-                                 src={notNullCart ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"}
+                    <ul className={styles.headerCartFav}>
+                        <li>
+                            <img onClick={() => setNotNullFavorite(!notNullFavorite)}
+                                 src={notNullFavorite ? 'headerIcon/addedHeart.svg' : "headerIcon/nullFavorite.svg"}
                                  alt="search"/>
-                        </Link>
-                    </li>
+                        </li>
+
+                        <li className={styles.headerCart}>
+                            <Link href={'/cart'}>
+                                <img ref={cartRef} onMouseEnter={onVisibleWindowCart}
+                                     src={notNullCart ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"}
+                                     alt="search"/>
+                            </Link>
+                        </li>
+
+                        <li onClick={() => setOnLogin('main')}>
+                            <img src="headerIcon/user.svg" alt=""/>
+                        </li>
+                        <li onClick={() => setAdmin(!admin)}  style={{marginLeft: '10px'}}>
+                            <img src="headerIcon/plus.svg" alt=""/>
+                        </li>
+                    </ul>
                 </div>
+                <div style={onLogin !== '' ? {display: "inherit"} : {display: 'none'}} className={styles.overlay}>
+                    {onLogin === 'main' && <Main setOnLogin={setOnLogin}/>}
+                    {onLogin === 'login' && <Login setOnLogin={setOnLogin}/>}
+                    {onLogin === 'register' && <Register setOnLogin={setOnLogin}/>}
+
+                </div>
+                {admin && <LoadingProduct setAdmin={setAdmin} admin={admin}/>}
                 {visibleWindowCart && notNullCart &&
                 <div ref={cartRef} className={styles.windowCart}>
                     <img onClick={onClosePopupCart} className={styles.closed} src="headerIcon/closed.svg" alt="closed"/>
@@ -164,7 +193,6 @@ export const Header: React.FC = () => {
                     </div>
                 </div>
                 }
-
             </div>
         </div>
     );

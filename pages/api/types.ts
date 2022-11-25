@@ -29,3 +29,10 @@ export interface IDataDto {
     items: IItemsDto[],
     meta: IMeta
 }
+
+export interface IAddItems {
+    title: string,
+    imageUrl: string,
+    price: string,
+    type: string
+}

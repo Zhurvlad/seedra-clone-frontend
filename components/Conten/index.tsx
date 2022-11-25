@@ -8,6 +8,7 @@ import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {ItemsApi} from "../../pages/api/items";
 import {itemsSelectors, setItems} from "../../redux/itemsSlice";
 import {IMeta} from "../../pages/api/types";
+import {Pagination} from "../Pagination";
 
 type ContentProps = {
     items: IItems[],
@@ -19,7 +20,7 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
     const [activeCategory, setActiveCategory] = React.useState(0)
     const {data} = useAppSelector(itemsSelectors)
     const [currentPage, setCurrentPage] = React.useState<number>(1)
-    console.log(data, 321)
+    console.log(activeCategory)
 
     /*const [items, setItems] = React.useState([])
 
@@ -40,22 +41,33 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
     React.useEffect(() => {
         (async () => {
             try {
-               if(currentPage === 1){
-                   const {items} = await ItemsApi().search({
-                       type: availableCategory[activeCategory].name
-                   })
-                   dispatch(setItems(items))
-               } else {
+                if (activeCategory !== 0) {
+                    const {items} = await ItemsApi().search({
+                        type: availableCategory[activeCategory].name
+                    })
+                    dispatch(setItems(items))
 
-                   const {items} = await ItemsApi().getAll(currentPage)
-                   dispatch(setItems(items))
-               }
+                } else {
+
+                    const {items} = await ItemsApi().getAll(currentPage)
+                    dispatch(setItems(items))
+                }
 
             } catch (e) {
                 console.log(e)
+            } finally {
+                window.scroll(0, 0)
             }
         })()
     }, [activeCategory, currentPage])
+
+    const onPrevPage = () => {
+        setCurrentPage(prevState => prevState - 1)
+    }
+
+    const onNextPage = () => {
+        setCurrentPage(prevState => prevState + 1)
+    }
 
     return (
         <div className={styles.content}>
@@ -67,51 +79,19 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
             </div>
             <Category setActiveCategory={setActiveCategory} activeCategory={activeCategory}/>
             <div className={styles.cartItem}>
-                {(activeCategory !== 0 || currentPage !== 1 ? data : items).map((obj, i) => <CardItem id={obj.id} title={obj.title}
-                                                                                 imageUrl={obj.imageUrl}
-                                                                                 price={obj.price}
-                                                                                 key={obj.id}/>)}
+                {(activeCategory !== 0 || currentPage !== 1 ? data : items).map((obj, i) => <CardItem id={obj.id}
+                                                                                                      title={obj.title}
+                                                                                                      imageUrl={obj.imageUrl}
+                                                                                                      price={obj.price}
+                                                                                                      key={obj.id}/>)}
 
             </div>
-            <nav>
-                <nav className="woocommerce-pagination">
-                    <ul className={styles.pagination}>
-                        {meta.currentPage === 1 ? ''
-                            : <li>
-                                <img src="headerIcon/arrowL.svg" alt=""/>
-                            </li>}
-                        {Array.from({length: meta.totalPages}, (_, i) => i + 1).map((num, i) => (
-                            <li>
-                                <p onClick={() => setCurrentPage(num)}>{num}</p>
-                            </li>
-                        ))}
-                        {meta.currentPage === meta.totalPages ? ''
-                            : <li>
-                                <img src="headerIcon/arrowR.svg" alt=""/>
-                            </li>}
-                        {/* <li>
-                            <a className="page-numbers" href="https://seedra.us/seeds/">1</a>
-                        </li>
-                        <li>
-                            <span aria-current="page" className="page-numbers current">2</span>
-                        </li>
-                        <li>
-                            <a className="page-numbers" href="https://seedra.us/seeds/page/3/">3</a>
-                        </li>
-                        <li>
-                            <span className="page-numbers dots">…</span>
-                        </li>
-                        <li>
-                            <a className="page-numbers" href="https://seedra.us/seeds/page/17/">17</a>
-                        </li>
-                        <li>
-                            <a className="next page-numbers" href="https://seedra.us/seeds/page/3/">
-                                <img src="headerIcon/arrowR.svg" alt=""/>
-                            </a>
-                        </li>*/}
-                    </ul>
-                </nav>
-            </nav>
+
+            {activeCategory === 0 && <Pagination setCurrentPage={setCurrentPage} totalPage={meta.totalPages} currentPage={currentPage} onNextPage={onNextPage} onPrevPage={onPrevPage}/>
+            }
+
+
+
         </div>
     );
 };

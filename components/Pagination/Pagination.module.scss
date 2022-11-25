@@ -1,0 +1,48 @@
+.pagination{
+  margin: 50px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 18px;
+
+  li{
+    margin: 0 10px;
+    transition: color 0.5s;
+    color: #70737c;
+
+    p{
+      padding: 0 5px;
+      cursor: pointer;
+    }
+
+    &:hover{
+      color: #359740;
+
+    }
+
+  }
+
+  svg{
+    path{
+      stroke: #70737C;
+      transition: color 0.5s;
+    }
+
+    &:hover{
+      path{
+        stroke: #359740;
+      }
+    }
+
+  }
+
+  svg{
+    transform: translateY(3px);
+  }
+}
+
+.paginationActive{
+  color: #359740;
+  cursor: text;
+}
