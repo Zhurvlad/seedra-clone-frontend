@@ -16,12 +16,13 @@
 
 .onLogin{
   width: 558px;
-  max-height: 590px;
+  max-height: 620px;
   background-color: #FFFFFF;
   padding: 32px;
   border: 2px solid #EFEFEF;
   border-radius: 16px;
   position: relative;
+  transform: translateY(-50px);
 
   h3{
     font-weight: 700;
@@ -104,6 +105,7 @@
   align-items: center;
   justify-content: center;
 
+
   button{
     padding: 14px 32px;
     cursor: pointer;
@@ -114,6 +116,14 @@
     font-weight: 400;
     background-color: #FFFFFF;
     transition: background-color 0.5s;
+
+    &:disabled, &:hover{
+      cursor: text;
+      background-color: #afb5ba;
+
+
+    }
+
     &:hover{
       background-color: rgba(53, 151, 64, 0.08);
     }
@@ -123,3 +133,94 @@
 .registration{
   margin-left: 8px;
 }
+
+.selectType{
+
+  p{
+    margin-bottom: 7px;
+    text-align: left;
+    color: #70737C;
+  }
+}
+
+.dropdown{
+  width: 100%;
+
+  span{
+
+  }
+}
+
+.select{
+  font-size: 16px;
+  background-color: #FFFFFF;
+  color: #70737C;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px #EFEFEF solid;
+  border-radius: 4px;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition: background-colol 0.5s;
+  margin-bottom: 30px;
+  position: relative;
+
+  &:hover{
+    background-color: rgba(53, 151, 64, 0.08);
+  }
+}
+
+.selectClick{
+  border: 1px #EFEFEF solid;
+  box-shadow: 0 0 0.8em #26489a;
+}
+
+.caret{
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid rgba(53, 151, 64, 1);
+  transition: 0.3s;
+}
+
+.caretRotation{
+  transform: rotate(180deg);
+}
+
+.menu{
+  bottom: -153px;
+  width: 490px;
+  padding: 0.2em 0.5em;
+  background-color: #FFFFFF;
+  border: 1px #EFEFEF solid;
+  box-shadow: 0 0.5em 1em rgba(53, 151, 64, 0.08);
+  border-radius: 4px;
+  color: #9fa5b5;
+  opacity: 0;
+  transition: 0.2s;
+  z-index: -3;
+  position: absolute;
+
+  li{
+    padding: 10px 8px;
+    margin: 0.3em -0px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover{
+      background-color: rgba(53, 151, 64, 0.08);
+    }
+  }
+}
+
+.active{
+  background-color: rgba(53, 151, 64, 0.2)
+}
+
+.menuOpen{
+  opacity: 1;
+  z-index: 3;
+}
+

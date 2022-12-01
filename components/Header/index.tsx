@@ -130,16 +130,16 @@ export const Header: React.FC = () => {
                         <img className={styles.loading} src="https://seedra.us/wp-content/uploads/2021/12/spinner.gif"
                              alt="Loading"/>}
 
-                        <div className={[styles.searchList, active && styles.searchListActive].join(' ')}>
-                            {items.length ? items.map((obj, i) => (
+                        <div className={[styles.searchList, active && searchValue.length !== 0 && styles.searchListActive].join(' ')}>
+                            {items.length !== 0 ? items.map((obj, i) => (
                                     //Тут надо сделать линк
                                     <div>
                                         <img src={obj.imageUrl} alt="Img"/>
                                         <p>{searchValue && obj.title}</p>
                                     </div>
                                 ))
-                                :
-                                <h6>Nothing found</h6>
+                                :  (searchValue.length !== 0 && isLoading ? <h6>Nothing found</h6> : '' )
+
                             }
                         </div>
                     </div>
