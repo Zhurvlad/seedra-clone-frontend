@@ -3,6 +3,10 @@ import styles from "../Authorization.module.scss";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoginSchema} from "../../../utils/validation";
+import {setCookie} from "nookies";
+import {CreateUserDto, LoginDto} from '../../../pages/api/types';
+import {UserApi} from '../../../pages/api/users';
+
 
 type LoginProps = {
     setOnLogin: (s: string) => void
@@ -14,9 +18,23 @@ export const Login:React.FC<LoginProps> = ({setOnLogin}) => {
         resolver: yupResolver(LoginSchema)
     });
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = async (dto: LoginDto) => {
+
+       try{
+           const data = await UserApi().register(dto)
+
+           setCookie(null, 'TJAuthToken', data.access_token, {
+               maxAge: 30 * 24 * 60 * 60,
+               path: '/'
+           })
+       } catch (e) {
+
+       }
+    }
+
 
     return (
+        // @ts-ignore
         <form onSubmit={handleSubmit(onSubmit)} className={styles.onLogin}>
             <h3>Вход</h3>
             <p>Если у вас есть учетная запись, пожалуйста, войдите в систему</p>

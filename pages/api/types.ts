@@ -36,3 +36,27 @@ export interface IAddItems {
     price: string,
     type: string
 }
+
+export interface ICartDto {
+    itemsId: number,
+    title: string,
+    imageUrl: string,
+    price: string
+}
+
+
+export type CreateUserDto = {
+    fullName: string,
+} & LoginDto
+
+export type LoginDto = {
+    email: string,
+    password: string,
+}
+
+export interface ResponseCreateUser {
+    id: number,
+    email: string,
+    fullName: string,
+    access_token: string
+}

@@ -1,6 +1,8 @@
 import React from 'react';
 import s from './body/sliderImage.png'
 import styles from './CardItem.module.scss'
+import axios from 'axios';
+import {CartApi} from '../../pages/api/cart';
 
 type CartItemProps = {
     imageUrl: string,
@@ -12,6 +14,18 @@ type CartItemProps = {
 export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) => {
     const [addedFavorite, setAddedFavorite] = React.useState(false)
     const [addedCart, setAddedCart] = React.useState(false)
+
+    const addItem = async () => {
+        const cartObj = {
+            title: title,
+            imageUrl: imageUrl,
+            itemsId: id,
+            price: price
+        }
+
+     await CartApi().addToCart(cartObj)
+        setAddedCart(!addedCart)
+    }
 
     return (
         <div className={styles.card}>
@@ -36,7 +50,7 @@ export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) =
                 <div className={styles.p}>
                     <div className={styles.price}>
                         <p>{price}</p>
-                        <div  onClick={() => setAddedCart(!addedCart)} className={addedCart ? styles.active : styles.priceCart}>
+                        <div  onClick={addItem} className={addedCart ? styles.active : styles.priceCart}>
                             <img  src={addedCart ? 'headerIcon/whiteCart.svg' : "headerIcon/cartSimple.svg"} alt="cart"/>
                         </div>
                     </div>
