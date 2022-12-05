@@ -4,8 +4,9 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoginSchema} from "../../../utils/validation";
 import {setCookie} from "nookies";
-import {CreateUserDto, LoginDto} from '../../../pages/api/types';
-import {UserApi} from '../../../pages/api/users';
+import {CreateUserDto, LoginDto} from '../../../utils/api/types';
+import {UserApi} from '../../../utils/api/users';
+import {Api} from '../../../utils/api';
 
 
 type LoginProps = {
@@ -21,7 +22,7 @@ export const Login:React.FC<LoginProps> = ({setOnLogin}) => {
     const onSubmit = async (dto: LoginDto) => {
 
        try{
-           const data = await UserApi().register(dto)
+           const data = await Api().user.register(dto)
 
            setCookie(null, 'TJAuthToken', data.access_token, {
                maxAge: 30 * 24 * 60 * 60,

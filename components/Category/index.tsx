@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from "./Category.module.scss";
-import {ItemsApi} from "../../pages/api/items";
+import {ItemsApi} from "../../utils/api/items";
 import {setItems} from "../../redux/itemsSlice";
 import {useAppDispatch} from "../../redux/hooks";
 

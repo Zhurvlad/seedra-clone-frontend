@@ -2,7 +2,7 @@ import React from 'react';
 import s from './body/sliderImage.png'
 import styles from './CardItem.module.scss'
 import axios from 'axios';
-import {CartApi} from '../../pages/api/cart';
+import {CartApi} from '../../utils/api/cart';
 
 type CartItemProps = {
     imageUrl: string,

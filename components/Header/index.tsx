@@ -5,7 +5,7 @@ import {CartItemComponent} from "../CartItemComponent";
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {IItems} from "../../models/IItems";
-import {ItemsApi} from "../../pages/api/items";
+import {ItemsApi} from "../../utils/api/items";
 import debounce from 'lodash.debounce';
 import {useForm, UseFormSetError} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";

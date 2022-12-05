@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
 import {IAddItems, ICartDto, IDataDto, IItemsDto} from './types';
 import {SearchItemsDto} from './items';
 import Cookies, {parseCookies} from "nookies";
@@ -18,7 +18,7 @@ const instance = axios.create({
 
 
 //Создаём функцию для запроса статей с БД
-export const CartApi = () => (
+export const CartApi = (instance: AxiosInstance) => (
     {
         async addToCart(dto: ICartDto): Promise<ICartDto> {
             const {data} = await instance.post<ICartDto>('/cart', dto)

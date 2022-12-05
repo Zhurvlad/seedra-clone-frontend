@@ -3,11 +3,12 @@ import styles from '../styles/Home.module.scss'
 import {Header} from "../components/Header";
 import {Content} from "../components/Conten";
 import {GetServerSideProps, NextPage} from "next";
-import {IDataDto, IItemsDto} from "./api/types";
-import {ItemsApi} from "./api/items";
+import {IDataDto, IItemsDto} from "../utils/api/types";
+import {ItemsApi} from "../utils/api/items";
 import {wrapper} from "../redux/store";
 import {setItems} from '../redux/itemsSlice';
 import {Html} from "next/document";
+import {Api} from '../utils/api';
 
 interface HomeProps {
     items: IDataDto
@@ -56,7 +57,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
     try {
 //Необходимо делать async await т.к. функция ниже возвращает промис а он всегда = true
-        const items = await ItemsApi().getAll()
+        const items = await Api().items.getAll()
 
         store.dispatch(setItems(items))
         return {

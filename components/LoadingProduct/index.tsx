@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './LoadingProduct.module.scss'
-import {ItemsApi} from "../../pages/api/items";
+import {ItemsApi} from "../../utils/api/items";
 
 type LoadingProductProps = {
     admin: boolean

@@ -3,6 +3,9 @@ import styles from "../Authorization.module.scss";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoginSchema, RegisterSchema} from "../../../utils/validation";
+import {CreateUserDto, LoginDto} from '../../../utils/api/types';
+import {Api} from '../../../utils/api';
+import {setCookie} from 'nookies';
 
 type RegisterProps = {
     setOnLogin: (s: string) => void
@@ -14,7 +17,19 @@ export const Register:React.FC<RegisterProps> = ({setOnLogin}) => {
         resolver: yupResolver(RegisterSchema)
     });
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = async (dto: CreateUserDto) => {
+
+        try{
+            const data = await Api().user.register(dto, 'user')
+            console.log(dto)
+            setCookie(null, 'TJAuthToken', data.access_token, {
+                maxAge: 30 * 24 * 60 * 60,
+                path: '/'
+            })
+        } catch (e) {
+
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.onLogin}>

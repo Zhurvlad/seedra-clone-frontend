@@ -1,19 +1,17 @@
 import axios, {AxiosInstance} from "axios";
 import {CreateUserDto, LoginDto, ResponseCreateUser} from "./types";
 
-const instance = axios.create({
-    baseURL: 'http://localhost:8888',
-    params: {}
-})
 
-export const UserApi = () => (
+export const UserApi = (instance: AxiosInstance) => (
     {
-        async register(dto: LoginDto): Promise<ResponseCreateUser> {
-            const {data} = await instance.post<LoginDto, { data: ResponseCreateUser }>('/auth/login', dto)
+        async register(dto: LoginDto, role: string): Promise<any> {
+            const {data} = await instance.post<LoginDto, { data: ResponseCreateUser  }>('/auth/register', {dto, role}, )
+            console.log(data)
             return data
+
         },
 
-      /*  async getAll() {
+        async getAll() {
             const {data} = await instance.get<ResponseCreateUser[]>('/users')
             return data
         },
@@ -25,6 +23,6 @@ export const UserApi = () => (
         async getMe() {
             const {data} = await instance.get<ResponseCreateUser>('/users/me')
             return data
-        }*/
+        }
     }
 )

@@ -5,9 +5,9 @@ import {availableCategory, Category} from "../Category";
 import axios from "axios";
 import {IItems} from "../../models/IItems";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {ItemsApi} from "../../pages/api/items";
+import {ItemsApi} from "../../utils/api/items";
 import {itemsSelectors, setItems} from "../../redux/itemsSlice";
-import {IMeta} from "../../pages/api/types";
+import {IMeta} from "../../utils/api/types";
 import {Pagination} from "../Pagination";
 
 type ContentProps = {

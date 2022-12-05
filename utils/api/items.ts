@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosInstance} from "axios";
 import {IAddItems, IDataDto, IItemsDto} from "./types";
 
 export class SearchItemsDto {
@@ -16,7 +16,7 @@ const instance = axios.create({
 
 
 //Создаём функцию для запроса статей с БД
-export const ItemsApi = () => (
+export const ItemsApi = (instance: AxiosInstance) => (
     {
         async getAll(page?: number): Promise<IDataDto> {
             const {data} = await instance.get<IDataDto>('/items', {
