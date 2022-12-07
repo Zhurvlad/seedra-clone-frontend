@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit'
 import axios from "axios";
 import {RootState} from "../store";
-import {IItems} from "../../models/IItems";
+import {IItems, IMeta} from "../../models/IItems";
 import {HYDRATE} from "next-redux-wrapper";
 
 /*export type urlParamsProps = {
@@ -13,9 +13,12 @@ import {HYDRATE} from "next-redux-wrapper";
     validPage: number
 }*/
 
+//TODO: Надо разобраться с Meta типизацией
+
 interface itemsSliceProps {
     status: StatusEnum
     data: IItems[]
+    meta: Object
 }
 
 export enum StatusEnum {
@@ -24,6 +27,7 @@ export enum StatusEnum {
     ERROR = 'error'
 }
 
+/*
 export const fetchItems = createAsyncThunk<IItems[]>(
     'items/fetchItems',
 
@@ -34,10 +38,12 @@ export const fetchItems = createAsyncThunk<IItems[]>(
         return data
     }
 )
+*/
 
 
 const initialState: itemsSliceProps = {
     data: [],
+    meta: {},
     status: StatusEnum.LOADING
 }
 
@@ -47,11 +53,17 @@ export const itemsSlice = createSlice({
     reducers: {
         setItems (state, action: PayloadAction<IItems[]>) {
             state.data = action.payload
+
+        },
+        setMeta (state, action: PayloadAction<IMeta[]>) {
+            state.meta = action.payload
+
         }
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
             state.data = action.payload.items.data
+            state.meta = action.payload.items.meta
         }
     }
    /* extraReducers:(builder) => {
@@ -72,6 +84,6 @@ export const itemsSlice = createSlice({
 
 export const itemsSelectors = (state:RootState) => state.items
 
-export const {setItems} = itemsSlice.actions
+export const {setItems, setMeta} = itemsSlice.actions
 
 export const items = itemsSlice.reducer

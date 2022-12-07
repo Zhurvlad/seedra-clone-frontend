@@ -14,6 +14,11 @@ import {Main} from "../Authorization/form/Main";
 import {Login} from "../Authorization/form/Login";
 import {Register} from "../Authorization/form/Register";
 import {LoadingProduct} from "../LoadingProduct";
+import {GetServerSideProps} from 'next';
+import {wrapper} from '../../redux/store';
+import {Api} from '../../utils/api';
+import {setItems} from '../../redux/itemsSlice';
+import { setUserData } from '../../redux/userSlice';
 
 
 export const Header: React.FC = () => {
@@ -28,7 +33,12 @@ export const Header: React.FC = () => {
     const [onLogin, setOnLogin] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
 
-
+    React.useEffect(() => {
+        (async () => {
+            const userData = await Api().user.getMe()
+            console.log(userData)
+        })()
+    }, [])
 
     const cartRef = useRef<HTMLImageElement>(null)
     const searchRef = useRef<HTMLDivElement>(null)

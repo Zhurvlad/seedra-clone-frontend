@@ -15,7 +15,7 @@ export type ApiReturnType = {
 //Создали функцию которая отпределяет откуда доставать Cookies. Брать куки из контукста или брать из браузера
 export const Api = (ctx?: NextPageContext | GetServerSidePropsContext): ApiReturnType => {
     const cookies = ctx ? Cookies.get(ctx) : parseCookies()
-    const token = cookies.TJAuthToken
+    const token = cookies.seedra
 
     const instance = axios.create({
         baseURL: 'http://localhost:8888/',

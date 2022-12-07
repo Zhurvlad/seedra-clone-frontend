@@ -9,6 +9,7 @@ import {ItemsApi} from "../../utils/api/items";
 import {itemsSelectors, setItems} from "../../redux/itemsSlice";
 import {IMeta} from "../../utils/api/types";
 import {Pagination} from "../Pagination";
+import {Api} from '../../utils/api';
 
 type ContentProps = {
     items: IItems[],
@@ -20,7 +21,7 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
     const [activeCategory, setActiveCategory] = React.useState(0)
     const {data} = useAppSelector(itemsSelectors)
     const [currentPage, setCurrentPage] = React.useState<number>(1)
-    console.log(activeCategory)
+
 
     /*const [items, setItems] = React.useState([])
 
@@ -42,14 +43,14 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
         (async () => {
             try {
                 if (activeCategory !== 0) {
-                    const {items} = await ItemsApi().search({
+                    const {items} = await Api().items.search({
                         type: availableCategory[activeCategory].name
                     })
                     dispatch(setItems(items))
 
                 } else {
 
-                    const {items} = await ItemsApi().getAll(currentPage)
+                    const {items} = await Api().items.getAll(currentPage)
                     dispatch(setItems(items))
                 }
 

@@ -6,17 +6,20 @@ import {GetServerSideProps, NextPage} from "next";
 import {IDataDto, IItemsDto} from "../utils/api/types";
 import {ItemsApi} from "../utils/api/items";
 import {wrapper} from "../redux/store";
-import {setItems} from '../redux/itemsSlice';
+import {setItems, setMeta} from '../redux/itemsSlice';
 import {Html} from "next/document";
 import {Api} from '../utils/api';
+import { setUserData } from '../redux/userSlice';
 
 interface HomeProps {
     items: IDataDto
 }
 
 const Home: NextPage<HomeProps> = ({items}) => {
-    return (
 
+    console.log(items, 963852)
+
+    return (
         <div>
                 <Head>
                     <title>Seedra</title>
@@ -37,7 +40,7 @@ const Home: NextPage<HomeProps> = ({items}) => {
 
                         <Header/>
 
-                        <Content meta={items?.meta} items={items?.items}/>
+                        <Content meta={items.meta} items={items.items}/>
                         {/* <Cart/>*/}
                         {/* <Cart/>*/}
                     </main>
@@ -56,13 +59,18 @@ const Home: NextPage<HomeProps> = ({items}) => {
 export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
 
     try {
-//Необходимо делать async await т.к. функция ниже возвращает промис а он всегда = true
+
         const items = await Api().items.getAll()
 
-        store.dispatch(setItems(items))
+        const userData = await Api(ctx).user.getMe()
+        store.dispatch(setUserData(userData))
+        store.dispatch(setItems(items.items))
+        store.dispatch(setMeta(items.meta))
+        console.log(items.meta, 14785)
         return {
             props: {
-                items
+                items,
+                userData
             }
         }
     } catch (e) {

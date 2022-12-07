@@ -6,35 +6,50 @@ import {LoginSchema, RegisterSchema} from "../../../utils/validation";
 import {CreateUserDto, LoginDto} from '../../../utils/api/types';
 import {Api} from '../../../utils/api';
 import {setCookie} from 'nookies';
+import {useAppDispatch} from '../../../redux/hooks';
+import { setUserData } from '../../../redux/userSlice';
 
 type RegisterProps = {
     setOnLogin: (s: string) => void
 }
 
+//TODO: Сделать нормальную ошибку пре регистрации
+
 export const Register:React.FC<RegisterProps> = ({setOnLogin}) => {
+    const [errorMessage, setErrorMessage] = React.useState('')
+    const dispatch = useAppDispatch()
+
+
     const {register, handleSubmit, formState: {errors}} = useForm({
         mode: 'onChange',
         resolver: yupResolver(RegisterSchema)
     });
 
     const onSubmit = async (dto: CreateUserDto) => {
+    console.log(dto)
 
         try{
-            const data = await Api().user.register(dto, 'user')
-            console.log(dto)
-            setCookie(null, 'TJAuthToken', data.access_token, {
+            const data = await Api().user.register(dto)
+            dispatch(setUserData(data))
+            setCookie(null, 'seedra', data.token, {
                 maxAge: 30 * 24 * 60 * 60,
                 path: '/'
             })
+            setErrorMessage('')
+         setOnLogin('')
         } catch (e) {
-
+            setErrorMessage(e.response?.data.message)
         }
     }
+
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.onLogin}>
             <h3>Вход</h3>
+
             <p>Если у вас есть учетная запись, пожалуйста, войдите в систему</p>
+            {errorMessage &&  <p style={{color: 'red'}}>Произошла ошибка при регистрации</p>}
             <div className={styles.promocode}>
                 <p>E-mail</p>
                 <input {...register("email")} type="text" placeholder={'E-mail'}/>
@@ -48,6 +63,12 @@ export const Register:React.FC<RegisterProps> = ({setOnLogin}) => {
             <div className={styles.promocode}>
                 <p>Password</p>
                 <input {...register("password")} type="text" placeholder={'Password'}/>
+                <p className={styles.error}>{errors.password?.message}</p>
+            </div>
+
+            <div style={{display: 'none'}} className={styles.promocode}>
+                <p>Password</p>
+                <input {...register("roles")} type="text" value={'user'} placeholder={'Password'}/>
                 <p className={styles.error}>{errors.password?.message}</p>
             </div>
             {/*<div className={styles.promocode}>

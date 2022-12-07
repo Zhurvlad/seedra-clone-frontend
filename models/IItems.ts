@@ -17,3 +17,14 @@ export interface IItems {
     title: string
 }
 
+export interface IMeta {
+    totalItems: number,
+    itemCount: number,
+    itemsPerPage: number
+}
+
+export interface IData {
+    items: IItems,
+    meta: IMeta
+}
+

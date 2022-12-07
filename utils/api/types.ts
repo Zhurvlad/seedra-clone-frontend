@@ -27,7 +27,7 @@ export interface IMeta {
 
 export interface IDataDto {
     items: IItemsDto[],
-    meta: IMeta
+    meta: IMeta[]
 }
 
 export interface IAddItems {
@@ -38,10 +38,11 @@ export interface IAddItems {
 }
 
 export interface ICartDto {
-    itemsId: number,
+    productId: number,
     title: string,
     imageUrl: string,
-    price: string
+    price: number,
+    quantity: number
 }
 
 
@@ -59,4 +60,9 @@ export interface ResponseCreateUser {
     email: string,
     fullName: string,
     access_token: string,
+}
+
+export interface ICart {
+    items: ICartDto[],
+    totalPrice: number
 }

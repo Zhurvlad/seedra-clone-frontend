@@ -3,6 +3,7 @@ import s from './body/sliderImage.png'
 import styles from './CardItem.module.scss'
 import axios from 'axios';
 import {CartApi} from '../../utils/api/cart';
+import {Api} from '../../utils/api';
 
 type CartItemProps = {
     imageUrl: string,
@@ -15,16 +16,16 @@ export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) =
     const [addedFavorite, setAddedFavorite] = React.useState(false)
     const [addedCart, setAddedCart] = React.useState(false)
 
-    const addItem = async () => {
-        const cartObj = {
-            title: title,
-            imageUrl: imageUrl,
-            itemsId: id,
-            price: price
-        }
-
-     await CartApi().addToCart(cartObj)
-        setAddedCart(!addedCart)
+    const addToCart = async () => {
+            const cartObj = {
+                title: title,
+                imageUrl: imageUrl,
+                productId: id,
+                price: 11,
+                quantity: 1
+            }
+            await Api().cart.addToCart(cartObj)
+            setAddedCart(!addedCart)
     }
 
     return (
@@ -50,7 +51,7 @@ export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) =
                 <div className={styles.p}>
                     <div className={styles.price}>
                         <p>{price}</p>
-                        <div  onClick={addItem} className={addedCart ? styles.active : styles.priceCart}>
+                        <div  onClick={addToCart} className={addedCart ? styles.active : styles.priceCart}>
                             <img  src={addedCart ? 'headerIcon/whiteCart.svg' : "headerIcon/cartSimple.svg"} alt="cart"/>
                         </div>
                     </div>

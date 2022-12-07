@@ -1,5 +1,5 @@
 import axios, {AxiosInstance} from 'axios';
-import {IAddItems, ICartDto, IDataDto, IItemsDto} from './types';
+import {IAddItems, ICart, ICartDto, IDataDto, IItemsDto} from './types';
 import {SearchItemsDto} from './items';
 import Cookies, {parseCookies} from "nookies";
 import {cookies} from 'next/headers';
@@ -21,7 +21,12 @@ const instance = axios.create({
 export const CartApi = (instance: AxiosInstance) => (
     {
         async addToCart(dto: ICartDto): Promise<ICartDto> {
-            const {data} = await instance.post<ICartDto>('/cart', dto)
+            const {data} = await instance.post<ICartDto>('/cart/create', dto)
+            return data
+        },
+
+        async getUserCart(): Promise<ICart[]> {
+            const {data} = await instance.get('/cart')
             return data
         },
         /* async create(dto: CreateCommentDto) {
