@@ -4,19 +4,29 @@ import styles from './CardItem.module.scss'
 import axios from 'axios';
 import {CartApi} from '../../utils/api/cart';
 import {Api} from '../../utils/api';
+import {useAppSelector} from '../../redux/hooks';
+import {itemsSelectors} from '../../redux/itemsSlice';
+import {cartSelectors} from '../../redux/cartSlice';
 
 type CartItemProps = {
     imageUrl: string,
     price: string,
     title: string
-    id: number
+    id: number,
+    items: any,
 }
 
-export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) => {
-    const [addedFavorite, setAddedFavorite] = React.useState(false)
-    const [addedCart, setAddedCart] = React.useState(false)
 
-    const addToCart = async () => {
+export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price, items, }) => {
+    const {data} = useAppSelector(cartSelectors)
+    const findItemFromCart =  data.items.some((obj) => obj.productId === id)
+
+    const [addedFavorite, setAddedFavorite] = React.useState(false)
+    const [addedCart, setAddedCart] = React.useState(findItemFromCart)
+
+
+    const addToCart = async (id: number) => {
+        if(!addedCart){
             const cartObj = {
                 title: title,
                 imageUrl: imageUrl,
@@ -26,7 +36,12 @@ export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) =
             }
             await Api().cart.addToCart(cartObj)
             setAddedCart(!addedCart)
+        } else {
+            await Api().cart.remove(id)
+        }
+        setAddedCart(!addedCart)
     }
+
 
     return (
         <div className={styles.card}>
@@ -51,7 +66,7 @@ export const CardItem:React.FC<CartItemProps> = ({title, id, imageUrl, price}) =
                 <div className={styles.p}>
                     <div className={styles.price}>
                         <p>{price}</p>
-                        <div  onClick={addToCart} className={addedCart ? styles.active : styles.priceCart}>
+                        <div  onClick={() => addToCart(id)} className={addedCart  ? styles.active : styles.priceCart}>
                             <img  src={addedCart ? 'headerIcon/whiteCart.svg' : "headerIcon/cartSimple.svg"} alt="cart"/>
                         </div>
                     </div>

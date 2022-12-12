@@ -18,8 +18,7 @@ import { ICart } from '../../utils/api/types';
 
 interface cartSliceProps {
     status: StatusEnum
-    data: ICart[]
-    totalPrice: number
+    data: ICart
 }
 
 export enum StatusEnum {
@@ -30,7 +29,6 @@ export enum StatusEnum {
 
 const initialState: cartSliceProps = {
     data: [],
-    totalPrice: 0,
     status: StatusEnum.LOADING
 }
 
@@ -38,15 +36,14 @@ export const cartSlice = createSlice({
     name: 'cartSlice',
     initialState,
     reducers: {
-        setCart (state, action: PayloadAction<ICart[]>) {
+        setCart (state, action: PayloadAction<ICart>) {
             state.data = action.payload
-            console.log(action.payload, '12345')
 
         },
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
-            state.data = action.payload.items.data
+            state.data = action.payload.cart.data
         }
     }
     /* extraReducers:(builder) => {
@@ -65,7 +62,7 @@ export const cartSlice = createSlice({
      }*/
 })
 
-export const itemsSelectors = (state:RootState) => state.cart
+export const cartSelectors = (state:RootState) => state.cart
 
 export const {setCart} = cartSlice.actions
 

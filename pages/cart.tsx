@@ -1,20 +1,25 @@
 import {CartComponent} from "../components/Cart";
 import React from "react";
 import {Header} from "../components/Header";
-import {Footer} from "../components/Footer";
-import {GetServerSideProps} from 'next';
+import {GetServerSideProps, NextPage} from 'next';
 import {Api} from '../utils/api';
-import {setUserData} from '../redux/userSlice';
 import {wrapper} from '../redux/store';
-import {setItems, setMeta} from '../redux/itemsSlice';
-import Home from './index';
-import { setCart } from "../redux/cartSlice";
+import {setCart} from "../redux/cartSlice";
 
-const Cart = () => {
+interface CartProps {
+    items: any
+}
+
+
+const Cart:NextPage<CartProps> = ({items}) => {
+
+
+
+
     return <div className={'container'}>
         <Header/>
-        <CartComponent/>
-        <Footer/>
+        <CartComponent items={items}/>
+       {/* <Footer/>*/}
     </div>
 }
 /*
@@ -46,8 +51,12 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     try {
         const userCart = await Api(ctx).cart.getUserCart()
         store.dispatch(setCart(userCart))
-        console.log(userCart, 9999)
 
+        return {
+            props: {
+                userCart
+            }
+        }
     } catch (e) {
         console.log(e)
     }

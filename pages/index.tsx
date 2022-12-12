@@ -10,6 +10,7 @@ import {setItems, setMeta} from '../redux/itemsSlice';
 import {Html} from "next/document";
 import {Api} from '../utils/api';
 import { setUserData } from '../redux/userSlice';
+import {setCart} from '../redux/cartSlice';
 
 interface HomeProps {
     items: IDataDto
@@ -17,7 +18,6 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({items}) => {
 
-    console.log(items, 963852)
 
     return (
         <div>
@@ -63,10 +63,12 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
         const items = await Api().items.getAll()
 
         const userData = await Api(ctx).user.getMe()
+        const userCart = await Api(ctx).cart.getUserCart()
+        store.dispatch(setCart(userCart))
         store.dispatch(setUserData(userData))
         store.dispatch(setItems(items.items))
         store.dispatch(setMeta(items.meta))
-        console.log(items.meta, 14785)
+
         return {
             props: {
                 items,

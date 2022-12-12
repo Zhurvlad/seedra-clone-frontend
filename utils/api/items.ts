@@ -33,6 +33,10 @@ export const ItemsApi = (instance: AxiosInstance) => (
          async remove(id: number) {
              await instance.delete<number>(`/comments/${id}`)
          }*/
+        async getOne(id: number){
+            const {data} = await instance.get(`/items/${id}`)
+            return data
+        },
         async search(query: SearchItemsDto) {
             const {data} = await instance.get<{ items: IItemsDto[] }>(`/items/search`, {params: query})
             return data

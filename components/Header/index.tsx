@@ -18,7 +18,9 @@ import {GetServerSideProps} from 'next';
 import {wrapper} from '../../redux/store';
 import {Api} from '../../utils/api';
 import {setItems} from '../../redux/itemsSlice';
-import { setUserData } from '../../redux/userSlice';
+import {setUserData} from '../../redux/userSlice';
+import {useAppSelector} from '../../redux/hooks';
+import {cartSelectors} from '../../redux/cartSlice';
 
 
 export const Header: React.FC = () => {
@@ -32,6 +34,7 @@ export const Header: React.FC = () => {
     const [login, setLogin] = React.useState(false)
     const [onLogin, setOnLogin] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
+    const {data} = useAppSelector(cartSelectors)
 
     React.useEffect(() => {
         (async () => {
@@ -81,7 +84,7 @@ export const Header: React.FC = () => {
     const handleChangeInput = async (inputValue: string) => {
         setIsLoading(true)
         try {
-            const {items} = await ItemsApi().search({title: inputValue.toUpperCase()})
+            const {items} = await Api().items.search({title: inputValue.toUpperCase()})
             // @ts-ignore
             setItems(items)
             if (!inputValue) return setActive(false)
@@ -140,15 +143,18 @@ export const Header: React.FC = () => {
                         <img className={styles.loading} src="https://seedra.us/wp-content/uploads/2021/12/spinner.gif"
                              alt="Loading"/>}
 
-                        <div className={[styles.searchList, active && searchValue.length !== 0 && styles.searchListActive].join(' ')}>
+                        <div
+                            className={[styles.searchList, active && searchValue.length !== 0 && styles.searchListActive].join(' ')}>
                             {items.length !== 0 ? items.map((obj, i) => (
                                     //Тут надо сделать линк
-                                    <div>
-                                        <img src={obj.imageUrl} alt="Img"/>
-                                        <p>{searchValue && obj.title}</p>
-                                    </div>
+                                    <Link href={`/items/${obj.id}`}>
+                                        <div>
+                                            <img src={obj.imageUrl} alt="Img"/>
+                                            <p>{searchValue && obj.title}</p>
+                                        </div>
+                                    </Link>
                                 ))
-                                :  (searchValue.length !== 0 && isLoading ? <h6>Nothing found</h6> : '' )
+                                : (searchValue.length !== 0 && isLoading ? <h6>Nothing found</h6> : '')
 
                             }
                         </div>
@@ -171,7 +177,7 @@ export const Header: React.FC = () => {
                         <li onClick={() => setOnLogin('main')}>
                             <img src="headerIcon/user.svg" alt=""/>
                         </li>
-                        <li onClick={() => setAdmin(!admin)}  style={{marginLeft: '10px'}}>
+                        <li onClick={() => setAdmin(!admin)} style={{marginLeft: '10px'}}>
                             <img src="headerIcon/plus.svg" alt=""/>
                         </li>
                     </ul>
@@ -187,15 +193,22 @@ export const Header: React.FC = () => {
                 <div ref={cartRef} className={styles.windowCart}>
                     <img onClick={onClosePopupCart} className={styles.closed} src="headerIcon/closed.svg" alt="closed"/>
                     <div className={styles.windowItems}>
-                        <div className={styles.windowCartItem}>
-                            <CartItemComponent>
-                                <div className={styles.price}>
-                                    <p className={styles.pack}>1 pack</p>
-                                    <p className={styles.priceText}>$24.56</p>
-                                </div>
-                            </CartItemComponent>
-                            <Count/>
-                        </div>
+                        {data.items.map(obj =>
+                            <div key={obj.id} className={styles.windowCartItem}>
+                                <CartItemComponent
+                                    imageUrl={obj.imageUrl}
+                                    productId={obj.id}
+                                    title={obj.title}
+
+                                >
+                                    <div className={styles.price}>
+                                        <p className={styles.pack}>1 pack</p>
+                                        <p className={styles.priceText}>$24.56</p>
+                                    </div>
+                                </CartItemComponent>
+                                <Count/>
+                            </div>
+                        )}
                     </div>
                     <div className={styles.payment}>
                         <p className={styles.clear}>Clear</p>

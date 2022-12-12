@@ -2,8 +2,19 @@ import React from 'react';
 import styles from './Cart.module.scss'
 import {CartItemComponent} from "../CartItemComponent";
 import {Count} from "../Count";
+import {useAppSelector} from '../../redux/hooks';
+import {cartSelectors} from '../../redux/cartSlice';
 
-export const CartComponent: React.FC = () => {
+interface CartComponentProps {
+    items: any
+}
+
+export const CartComponent: React.FC<CartComponentProps> = ({items}) => {
+    console.log(items, 0)
+
+    const {data} = useAppSelector(cartSelectors)
+
+
     return (
         <div className={styles.cart}>
             <div className={styles.itemInfo}>
@@ -18,14 +29,15 @@ export const CartComponent: React.FC = () => {
                         <li>PRICE</li>
                         <li>TOTAL</li>
                     </ul>
-                    <div className={styles.cartPrice}>
-                        <CartItemComponent/>
-                        <div className={styles.count}>
-                            <Count/>
-                        </div>
-                        <p className={styles.text}>$12.56</p>
-                        <p className={styles.text}>$24.56</p>
-                    </div>
+                    {data.items?.map(i =>
+                        <div key={i.title} className={styles.cartPrice}>
+                            <CartItemComponent productId={i.productId} imageUrl={i.imageUrl} title={i.title}/>
+                            <div className={styles.count}>
+                                <Count count = {i.quantity}/>
+                            </div>
+                            <p className={styles.text}>$ {i.price}</p>
+                            <p className={styles.text}>$ {i.subTotalPrice}</p>
+                        </div>)}
                 </div>
                 <button>
                     Continue shopping
@@ -35,7 +47,7 @@ export const CartComponent: React.FC = () => {
                 <p className={styles.orderTitle}>Order summary</p>
                 <div className={styles.subtitle}>
                     <p className={styles.subtitleLeft}>3 ITEMS</p>
-                    <p className={styles.subtitleRight}>$12.56</p>
+                    <p className={styles.subtitleRight}>$ {data.totalPrice}</p>
                 </div>
                 <div className={styles.shipping}>
                     <div>
@@ -50,7 +62,7 @@ export const CartComponent: React.FC = () => {
                 </div>
                 <div className={styles.subtitle}>
                     <p className={styles.subtitleLeft}>Total amount</p>
-                    <p className={styles.subtitleRight}>$12.56</p>
+                    <p className={styles.subtitleRight}>$ {data.totalPrice}</p>
                 </div>
                 <div className={styles.continues}>
                     Continue
