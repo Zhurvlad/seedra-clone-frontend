@@ -3,7 +3,7 @@ import axios from "axios";
 import {RootState} from "../store";
 import {IItems, IMeta} from "../../models/IItems";
 import {HYDRATE} from "next-redux-wrapper";
-import { ICart } from '../../utils/api/types';
+import {ICart, ICartDto} from '../../utils/api/types';
 
 /*export type urlParamsProps = {
     searchPizza: string,
@@ -40,6 +40,25 @@ export const cartSlice = createSlice({
             state.data = action.payload
 
         },
+        clearCart (state) {
+            state.data.items = []
+            state.data.totalPrice = 0
+            state.data.totalCount = 0
+        },
+        addToCart (state, action: PayloadAction<ICartDto>) {
+            const findItem = state.data.items?.find(obj => obj.productId === action.payload.productId)
+
+            if(findItem){
+                findItem.quantity++
+            } else {
+                state.data.items?.push({...action.payload})
+            }
+        },
+        remove(state, actions: PayloadAction<number>){
+          state.data.items =  state.data.items.filter(obj => obj.productId !== actions.payload)
+
+        }
+
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
@@ -64,6 +83,6 @@ export const cartSlice = createSlice({
 
 export const cartSelectors = (state:RootState) => state.cart
 
-export const {setCart} = cartSlice.actions
+export const {setCart, clearCart, addToCart, remove} = cartSlice.actions
 
 export const cart = cartSlice.reducer

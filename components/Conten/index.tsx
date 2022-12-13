@@ -27,6 +27,7 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
     const [currentPage, setCurrentPage] = React.useState<number>(1)
     const [findCartItem, setFindCartItem] = React.useState(false)
     const [addedCart, setAddedCart] = React.useState(true)
+    const cartData = useAppSelector(cartSelectors)
 
 
     /*  const addToCart = async (cartObj: any) => {
@@ -94,6 +95,8 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
     const onNextPage = () => {
         setCurrentPage(prevState => prevState + 1)
     }
+    const findItemFromCart = cartData.data.items?.some((obj) => obj.productId === 2)
+
 
     return (
         <div className={styles.content}>
@@ -108,14 +111,14 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
             <div className={styles.cartItem}>
 
                 {(activeCategory !== 0 || currentPage !== 1 ? data : items).map((obj, i) =>
-                    <Link href={`/items/${obj.id}`}>
+
                         <CardItem id={obj.id}
                                   items={data}
                                   title={obj.title}
                                   imageUrl={obj.imageUrl}
                                   price={obj.price}
                                   key={obj.id}/>
-                    </Link>
+
                 )}
             </div>
 

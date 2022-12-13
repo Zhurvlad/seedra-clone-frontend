@@ -1,6 +1,8 @@
 import React, {ReactNode} from 'react';
 import styles from "./CartItemComponent.module.scss";
 import {Api} from '../../utils/api';
+import {remove} from '../../redux/cartSlice';
+import {useAppDispatch} from '../../redux/hooks';
 
 type CartItemComponent = {
     children: ReactNode,
@@ -10,11 +12,13 @@ type CartItemComponent = {
 }
 
 export const CartItemComponent:React.FC<CartItemComponent> = ({children, title, imageUrl, productId}) => {
+    const dispatch = useAppDispatch()
 
     const removeCartItem = async () => {
         try {
 
             await Api().cart.remove(productId)
+            dispatch(remove(productId))
         } catch (e) {
             console.log(e)
         }

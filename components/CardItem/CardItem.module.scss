@@ -16,6 +16,14 @@
   border-radius: 8px;
   position: relative;
   padding: 28px 28px 24px 28px;
+
+  h5{
+    color: inherit;
+    transition: color 0.5s;
+    &:hover{
+      color: #359740;
+    }
+  }
 }
 
 .img{

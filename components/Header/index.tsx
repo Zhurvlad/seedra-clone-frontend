@@ -19,8 +19,8 @@ import {wrapper} from '../../redux/store';
 import {Api} from '../../utils/api';
 import {setItems} from '../../redux/itemsSlice';
 import {setUserData} from '../../redux/userSlice';
-import {useAppSelector} from '../../redux/hooks';
-import {cartSelectors} from '../../redux/cartSlice';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
+import {cartSelectors, cartSlice, clearCart} from '../../redux/cartSlice';
 
 
 export const Header: React.FC = () => {
@@ -35,6 +35,10 @@ export const Header: React.FC = () => {
     const [onLogin, setOnLogin] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
     const {data} = useAppSelector(cartSelectors)
+    const dispatch = useAppDispatch()
+
+
+    console.log(data.items)
 
     React.useEffect(() => {
         (async () => {
@@ -85,7 +89,6 @@ export const Header: React.FC = () => {
         setIsLoading(true)
         try {
             const {items} = await Api().items.search({title: inputValue.toUpperCase()})
-            // @ts-ignore
             setItems(items)
             if (!inputValue) return setActive(false)
             if (inputValue) return setActive(true)
@@ -101,6 +104,15 @@ export const Header: React.FC = () => {
     const onDebounce = (event: ChangeEvent<HTMLInputElement>) => {
         debounceFn(event.target.value)
         setSearchValue(event.target.value)
+    }
+
+    const onClearCart = async () => {
+        try {
+            await Api().cart.clearCart()
+            dispatch(clearCart())
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
@@ -192,28 +204,37 @@ export const Header: React.FC = () => {
                 {visibleWindowCart && notNullCart &&
                 <div ref={cartRef} className={styles.windowCart}>
                     <img onClick={onClosePopupCart} className={styles.closed} src="headerIcon/closed.svg" alt="closed"/>
-                    <div className={styles.windowItems}>
-                        {data.items.map(obj =>
-                            <div key={obj.id} className={styles.windowCartItem}>
-                                <CartItemComponent
-                                    imageUrl={obj.imageUrl}
-                                    productId={obj.id}
-                                    title={obj.title}
-
-                                >
-                                    <div className={styles.price}>
-                                        <p className={styles.pack}>1 pack</p>
-                                        <p className={styles.priceText}>$24.56</p>
+                    {data.items?.length === 0 ?
+                        <div className={styles.emptyCart}>
+                            <img src="https://dodopizza-a.akamaihd.net/site-static/dist/121df529925b0f43cc73.svg"
+                                 alt="Dog"/>
+                            <h2>Oh it's empty!</h2>
+                            <p>Your shopping cart is empty, add your favorite products to the cart.</p>
+                        </div>
+                        : <div>
+                            <div className={styles.windowItems}>
+                                {data.items.map(obj =>
+                                    <div key={obj.productId} className={styles.windowCartItem}>
+                                        <CartItemComponent
+                                            imageUrl={obj.imageUrl}
+                                            productId={obj.productId}
+                                            title={obj.title}>
+                                            <div className={styles.price}>
+                                                <p className={styles.pack}>1 pack</p>
+                                                <p className={styles.priceText}>$24.56</p>
+                                            </div>
+                                        </CartItemComponent>
+                                        <Count count={obj.quantity}/>
                                     </div>
-                                </CartItemComponent>
-                                <Count/>
+                                )}
                             </div>
-                        )}
-                    </div>
-                    <div className={styles.payment}>
-                        <p className={styles.clear}>Clear</p>
-                        <p className={styles.pay}>Proceed to payment</p>
-                    </div>
+                            <div className={styles.payment}>
+                                <p onClick={onClearCart} className={styles.clear}>Clear</p>
+                                <Link href={'/cart'}>
+                                    <p className={styles.pay}>Proceed to payment</p>
+                                </Link>
+                            </div>
+                        </div>}
                 </div>
                 }
             </div>
