@@ -1,10 +1,9 @@
 import React from 'react';
-import {Header} from '../../components/Header';
-import {CartComponent} from '../../components/Cart';
 import {FullProduct} from '../../components/FullProduct';
 import {Api} from '../../utils/api';
 import {GetServerSideProps, NextPage} from 'next';
 import {IItems} from '../../models/IItems';
+import {withLayout} from "../../layout/Layout";
 
 interface WritePageProps {
     items: IItems
@@ -12,13 +11,11 @@ interface WritePageProps {
 
 const FullProductPage:NextPage<WritePageProps> = ({items}) => {
 
-    console.log(items.id)
 
-    return <div className={'container'}>
-        <Header/>
-        <FullProduct items={items}/>
-        {/* <Footer/>*/}
-    </div>
+
+    return <FullProduct items={items}/>
+
+
 };
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
@@ -44,4 +41,5 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
     }
 }
 
-export default FullProductPage
+
+export default withLayout(FullProductPage)

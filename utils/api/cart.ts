@@ -7,7 +7,7 @@ import {cookies} from 'next/headers';
 /*const cookies = ctx ? Cookies.get(ctx) : parseCookies()*/
 const token = parseCookies().access_token
 
-console.log(token)
+
 
 const instance = axios.create({
     baseURL: 'http://localhost:8888',

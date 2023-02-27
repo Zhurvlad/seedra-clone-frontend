@@ -29,7 +29,7 @@ export const CartItemComponent:React.FC<CartItemComponent> = ({children, title, 
             <img onClick={removeCartItem} className={styles.closedRed} src="headerIcon/closedRed.svg" alt=""/>
             <img  className={styles.img} src={imageUrl} alt=""/>
             <div>
-                <p>{title}</p>
+                <p>{title.length > 120 ? `${title} + '...'` : title}</p>
                 {children}
             </div>
         </div>

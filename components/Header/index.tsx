@@ -1,30 +1,33 @@
-import React, {ChangeEvent, useCallback, useMemo, useRef} from 'react';
-import styles from './Header.module.scss'
-import {Count} from "../Count";
-import {CartItemComponent} from "../CartItemComponent";
+import React, {ChangeEvent, useContext, useMemo, useRef} from 'react';
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {IItems} from "../../models/IItems";
-import {ItemsApi} from "../../utils/api/items";
 import debounce from 'lodash.debounce';
-import {useForm, UseFormSetError} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {LoginSchema} from "../../utils/validation";
+
+import {Count} from "../Count";
+import {CartItemComponent} from "../CartItemComponent";
 import {Main} from "../Authorization/form/Main";
 import {Login} from "../Authorization/form/Login";
 import {Register} from "../Authorization/form/Register";
 import {LoadingProduct} from "../LoadingProduct";
-import {GetServerSideProps} from 'next';
-import {wrapper} from '../../redux/store';
+
 import {Api} from '../../utils/api';
-import {setItems} from '../../redux/itemsSlice';
-import {setUserData} from '../../redux/userSlice';
-import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {cartSelectors, cartSlice, clearCart} from '../../redux/cartSlice';
+import {useAppSelector} from '../../redux/hooks';
+import {cartSelectors} from '../../redux/cartSlice';
+import {AppContext} from "../../context/app.context";
+import {IItems} from "../../utils/api/types";
+
+import MainLogoSVG from './mainLogo.svg'
+import UserLogoSVG from './user.svg'
+import SearchSVG from './headerSearch.svg'
+import PlusSVG from './plus.svg'
+import ClosedSVG from './closed.svg'
+
+import styles from './Header.module.scss'
+
+
 
 
 export const Header: React.FC = () => {
-    const [notNullCart, setNotNullCart] = React.useState(true)
     const [notNullFavorite, setNotNullFavorite] = React.useState(false)
     const [visibleWindowCart, setVisibleWindowCart] = React.useState(false)
     const [active, setActive] = React.useState<boolean>(false)
@@ -35,15 +38,14 @@ export const Header: React.FC = () => {
     const [onLogin, setOnLogin] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
     const {data} = useAppSelector(cartSelectors)
-    const dispatch = useAppDispatch()
+    const [searchCount, setSearchCount] = React.useState<number>(0)
 
+    const {onClearCart} = useContext(AppContext)
 
-    console.log(data.items)
 
     React.useEffect(() => {
         (async () => {
             const userData = await Api().user.getMe()
-            console.log(userData)
         })()
     }, [])
 
@@ -65,15 +67,15 @@ export const Header: React.FC = () => {
 
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            //Типизация скрытия попапаесли клик был произведён вне области попапа'
+            //Типизация скрытия попапа если клик был произведён вне области попапа'
             const _event = event as MouseEvent & {
                 path: Node[]
             }
-            if (cartRef.current && !_event.path.includes(cartRef.current)) {
+            if (cartRef.current && !_event.path?.includes(cartRef.current)) {
                 setVisibleWindowCart(false)
             }
 
-            if (searchRef.current && !_event.path.includes(searchRef.current)) {
+            if (searchRef.current && !_event.path?.includes(searchRef.current)) {
                 setActive(false)
             }
         }
@@ -88,8 +90,9 @@ export const Header: React.FC = () => {
     const handleChangeInput = async (inputValue: string) => {
         setIsLoading(true)
         try {
-            const {items} = await Api().items.search({title: inputValue.toUpperCase()})
+            const {items, totalCount} = await Api().items.search({title: inputValue.toUpperCase()})
             setItems(items)
+            setSearchCount(totalCount)
             if (!inputValue) return setActive(false)
             if (inputValue) return setActive(true)
         } catch (e) {
@@ -99,6 +102,7 @@ export const Header: React.FC = () => {
         }
     }
 
+
     const debounceFn = useMemo(() => debounce(handleChangeInput, 1000), [])
 
     const onDebounce = (event: ChangeEvent<HTMLInputElement>) => {
@@ -106,21 +110,16 @@ export const Header: React.FC = () => {
         setSearchValue(event.target.value)
     }
 
-    const onClearCart = async () => {
-        try {
-            await Api().cart.clearCart()
-            dispatch(clearCart())
-        } catch (e) {
-            console.log(e)
-        }
-    }
+
+
+
 
     return (
         <div className={styles.header}>
             <div className={styles.headerTop}>
                 <div className={styles.headerLogo}>
                     <Link href={'/'}>
-                        <img src='headerIcon/mainLogo.svg' alt="Logo"/>
+                        <MainLogoSVG  className={styles.logo}/>
                     </Link>
                 </div>
                 {/* <nav className={styles.menu}>
@@ -150,23 +149,23 @@ export const Header: React.FC = () => {
                                onFocus={() => setActive(!active)}
                                type="text"
                                placeholder={'Search'}/>
-                        <img className={styles.searchIcon} src="headerIcon/headerSearch.svg" alt="search"/>
+                        <SearchSVG className={styles.searchIcon}/>
                         {isLoading &&
                         <img className={styles.loading} src="https://seedra.us/wp-content/uploads/2021/12/spinner.gif"
                              alt="Loading"/>}
 
                         <div
                             className={[styles.searchList, active && searchValue.length !== 0 && styles.searchListActive].join(' ')}>
-                            {items.length !== 0 ? items.map((obj, i) => (
-                                    //Тут надо сделать линк
-                                    <Link href={`/items/${obj.id}`}>
+
+                            {searchCount !== 0 ? items.map((obj, i) => (
+                                    <Link key={obj.id} href={`/items/${obj.id}`}>
                                         <div>
                                             <img src={obj.imageUrl} alt="Img"/>
                                             <p>{searchValue && obj.title}</p>
                                         </div>
                                     </Link>
                                 ))
-                                : (searchValue.length !== 0 && isLoading ? <h6>Nothing found</h6> : '')
+                                : (searchValue.length !== 0 ? <h6>Nothing found</h6> : '')
 
                             }
                         </div>
@@ -181,30 +180,34 @@ export const Header: React.FC = () => {
                         <li className={styles.headerCart}>
                             <Link href={'/cart'}>
                                 <img ref={cartRef} onMouseEnter={onVisibleWindowCart}
-                                     src={notNullCart ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"}
+                                     src={data.totalCount !== 0 ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"}
                                      alt="search"/>
                             </Link>
                         </li>
 
-                        <li onClick={() => setOnLogin('main')}>
-                            <img src="headerIcon/user.svg" alt=""/>
-                        </li>
+
+                        {!data.user && <li onClick={() => setOnLogin('main')}>
+                            <UserLogoSVG className={styles.userLogo}/>
+                        </li>}
+
                         <li onClick={() => setAdmin(!admin)} style={{marginLeft: '10px'}}>
-                            <img src="headerIcon/plus.svg" alt=""/>
+                            <PlusSVG className={styles.plusSVG}/>
                         </li>
                     </ul>
                 </div>
+
                 <div style={onLogin !== '' ? {display: "inherit"} : {display: 'none'}} className={styles.overlay}>
                     {onLogin === 'main' && <Main setOnLogin={setOnLogin}/>}
                     {onLogin === 'login' && <Login setOnLogin={setOnLogin}/>}
                     {onLogin === 'register' && <Register setOnLogin={setOnLogin}/>}
-
                 </div>
+
                 {admin && <LoadingProduct setAdmin={setAdmin} admin={admin}/>}
-                {visibleWindowCart && notNullCart &&
+
+                {visibleWindowCart && data.totalCount !== 0 &&
                 <div ref={cartRef} className={styles.windowCart}>
-                    <img onClick={onClosePopupCart} className={styles.closed} src="headerIcon/closed.svg" alt="closed"/>
-                    {data.items?.length === 0 ?
+                    <ClosedSVG onClick={onClosePopupCart} className={styles.closed}/>
+                    {data.totalCount === 0 ?
                         <div className={styles.emptyCart}>
                             <img src="https://dodopizza-a.akamaihd.net/site-static/dist/121df529925b0f43cc73.svg"
                                  alt="Dog"/>
@@ -213,7 +216,7 @@ export const Header: React.FC = () => {
                         </div>
                         : <div>
                             <div className={styles.windowItems}>
-                                {data.items.map(obj =>
+                                {data.items?.map(obj =>
                                     <div key={obj.productId} className={styles.windowCartItem}>
                                         <CartItemComponent
                                             imageUrl={obj.imageUrl}
@@ -224,7 +227,7 @@ export const Header: React.FC = () => {
                                                 <p className={styles.priceText}>$24.56</p>
                                             </div>
                                         </CartItemComponent>
-                                        <Count count={obj.quantity}/>
+                                        <Count id={obj.productId} count={obj.quantity}/>
                                     </div>
                                 )}
                             </div>
@@ -235,8 +238,8 @@ export const Header: React.FC = () => {
                                 </Link>
                             </div>
                         </div>}
-                </div>
-                }
+                </div>}
+
             </div>
         </div>
     );

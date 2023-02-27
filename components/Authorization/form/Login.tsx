@@ -4,8 +4,7 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {LoginSchema} from "../../../utils/validation";
 import {setCookie} from "nookies";
-import {CreateUserDto, LoginDto} from '../../../utils/api/types';
-import {UserApi} from '../../../utils/api/users';
+import {LoginDto} from '../../../utils/api/types';
 import {Api} from '../../../utils/api';
 
 
@@ -14,7 +13,7 @@ type LoginProps = {
 }
 
 export const Login:React.FC<LoginProps> = ({setOnLogin}) => {
-    const {register, handleSubmit, formState: {errors}} = useForm({
+    const {register, handleSubmit, formState: {errors}, reset, clearErrors} = useForm({
         mode: 'onChange',
         resolver: yupResolver(LoginSchema)
     });
@@ -29,13 +28,13 @@ export const Login:React.FC<LoginProps> = ({setOnLogin}) => {
                path: '/'
            })
        } catch (e) {
-
+            console.log(e)
        }
     }
 
 
     return (
-        // @ts-ignore
+
         <form onSubmit={handleSubmit(onSubmit)} className={styles.onLogin}>
             <h3>Вход</h3>
             <p>Если у вас есть учетная запись, пожалуйста, войдите в систему</p>

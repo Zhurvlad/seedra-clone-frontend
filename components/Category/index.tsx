@@ -1,8 +1,5 @@
-import React from 'react';
+import React, {DetailedHTMLProps, HTMLAttributes} from 'react';
 import styles from "./Category.module.scss";
-import {ItemsApi} from "../../utils/api/items";
-import {setItems} from "../../redux/itemsSlice";
-import {useAppDispatch} from "../../redux/hooks";
 
 export const availableCategory = [
     {name: 'All', url: 'headerIcon/treeLeaf.svg'},
@@ -14,12 +11,12 @@ export const availableCategory = [
     {name: 'FLOWERS', url: 'headerIcon/flower.svg'}
 ]
 
-type CategoryProps = {
+interface CategoryProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>{
     activeCategory: number,
     setActiveCategory: (i: number) => void
 }
 
-export const Category:React.FC<CategoryProps> = ({activeCategory, setActiveCategory}) => {
+export const Category:React.FC<CategoryProps> = ({activeCategory, setActiveCategory}):JSX.Element => {
 
 
 

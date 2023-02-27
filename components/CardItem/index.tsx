@@ -1,13 +1,10 @@
-import React from 'react';
-import s from './body/sliderImage.png'
+import React, {useContext} from 'react';
 import styles from './CardItem.module.scss'
-import axios from 'axios';
-import {CartApi} from '../../utils/api/cart';
 import {Api} from '../../utils/api';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
-import {itemsSelectors} from '../../redux/itemsSlice';
 import {addToCart, cartSelectors, remove} from '../../redux/cartSlice';
 import Link from 'next/link';
+import {AppContext} from "../../context/app.context";
 
 
 
@@ -23,31 +20,35 @@ type CartItemProps = {
 export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, items,}) => {
     const {data} = useAppSelector(cartSelectors)
     const findItemFromCart = data.items?.some((obj) => obj.productId === id)
-
+    const {nullCart} = useContext(AppContext)
     const [addedFavorite, setAddedFavorite] = React.useState(false)
-    const [addedCart, setAddedCart] = React.useState(findItemFromCart)
+  /*  const [addedCart, setAddedCart] = React.useState(nullCart)*/
+  /*  const [addedCart, setAddedCart] = React.useState(findItemFromCart)*/
+
+
+
+
     const dispatch = useAppDispatch()
 
 
     const addItemToCart = async (id: number) => {
-        if (!addedCart) {
+        if (!findItemFromCart) {
             const cartObj = {
                 title: title,
                 imageUrl: imageUrl,
                 productId: id,
-                price: 11,
+                price: price,
                 quantity: 1
             }
             await Api().cart.addToCart(cartObj)
-            setAddedCart(!addedCart)
             dispatch(addToCart(cartObj))
-
         } else {
             await Api().cart.remove(id)
             dispatch(remove(id))
+
         }
-        setAddedCart(!addedCart)
     }
+
 
 
     return (
@@ -59,7 +60,7 @@ export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, i
                             <img src={imageUrl} alt="Seedra Cilantro Seeds for Planting Indoor and Outdoor"/>
                         </div>
                         <h5 className={styles.text}>
-                            {title}
+                            {title.length > 120 ? `${title.slice(0, 120)}  ...` : title}
                         </h5>
                         <div onClick={() => setAddedFavorite(!addedFavorite)} className={styles.heart}>
                             <img src={addedFavorite ? "headerIcon/yellowHeartAdded.svg" : "headerIcon/yellowHeart.svg"}
@@ -77,9 +78,9 @@ export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, i
                 </div>
                 <div className={styles.p}>
                     <div className={styles.price}>
-                        <p>{price}</p>
-                        <div onClick={() => addItemToCart(id)} className={addedCart ? styles.active : styles.priceCart}>
-                            <img src={addedCart ? 'headerIcon/whiteCart.svg' : "headerIcon/cartSimple.svg"} alt="cart"/>
+                        <p>${price}</p>
+                        <div onClick={() => addItemToCart(id)} className={findItemFromCart  ? styles.active : styles.priceCart}>
+                            <img src={findItemFromCart ? 'headerIcon/whiteCart.svg' : "headerIcon/cartSimple.svg"} alt="cart"/>
                         </div>
                     </div>
                 </div>

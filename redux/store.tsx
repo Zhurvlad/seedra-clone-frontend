@@ -1,5 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { createWrapper, Context } from 'next-redux-wrapper';
+import { createWrapper } from 'next-redux-wrapper';
 import {items} from './itemsSlice'
 import {user} from './userSlice';
 import {cart} from './cartSlice';
@@ -12,6 +12,7 @@ export function makeStore() {
             user,
             cart
         },
+        devTools: true
     });
 }
 

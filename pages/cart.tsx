@@ -1,10 +1,10 @@
 import {CartComponent} from "../components/Cart";
 import React from "react";
-import {Header} from "../components/Header";
 import {GetServerSideProps, NextPage} from 'next';
 import {Api} from '../utils/api';
 import {wrapper} from '../redux/store';
 import {setCart} from "../redux/cartSlice";
+import {withLayout} from "../layout/Layout";
 
 interface CartProps {
     items: any
@@ -16,10 +16,10 @@ const Cart:NextPage<CartProps> = ({items}) => {
 
 
 
-    return <div className={'container'}>
-        <Header/>
+    return<div >
+
         <CartComponent items={items}/>
-       {/* <Footer/>*/}
+
     </div>
 }
 /*
@@ -70,4 +70,4 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
 
 
-export default Cart
+export default withLayout(Cart)

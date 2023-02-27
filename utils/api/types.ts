@@ -9,12 +9,17 @@ enum ItemsEnum {
 
 }
 
-export interface IItemsDto {
+export interface IItems {
     id: number
     imageUrl: string
     type: ItemsEnum[]
     price: string
     title: string
+}
+
+export interface IItemsDto {
+   items: IItems[],
+    totalCount: number
 }
 
 export interface IMeta {
@@ -42,7 +47,8 @@ export interface ICartDto {
     title: string,
     imageUrl: string,
     price: number,
-    quantity: number
+    quantity: number,
+    subTotalPrice: number
 }
 
 
@@ -62,7 +68,18 @@ export interface ResponseCreateUser {
     access_token: string,
 }
 
+export interface UserDto {
+    id: number,
+    email: string,
+    fullName: string,
+    createdAt: string,
+    updatedAt: string
+}
+
 export interface ICart {
+    _id?: number,
     items: ICartDto[],
-    totalPrice: number
+    totalPrice?: number,
+    totalCount?: number,
+    user?:  UserDto[]
 }

@@ -4,23 +4,26 @@ import {CartItemComponent} from "../CartItemComponent";
 import {Count} from "../Count";
 import {useAppSelector} from '../../redux/hooks';
 import {cartSelectors} from '../../redux/cartSlice';
+import Link from "next/link";
 
 interface CartComponentProps {
     items: any
 }
 
 export const CartComponent: React.FC<CartComponentProps> = ({items}) => {
-    console.log(items, 0)
+
 
     const {data} = useAppSelector(cartSelectors)
 
+    const totalPrice = data.items?.map((m) => m.subTotalPrice).reduce((sum, price) => sum  + price, 0)
+    const totalCount = data.items?.map((m) => m.quantity).reduce((sum, price) => sum  + price, 0)
 
     return (
         <div className={styles.cart}>
             <div className={styles.itemInfo}>
                 <div className={styles.title}>
                     <h2>Your cart.</h2>
-                    <p>3 items</p>
+                    <p>{totalCount} items</p>
                 </div>
                 <div>
                     <ul className={styles.details}>
@@ -31,23 +34,25 @@ export const CartComponent: React.FC<CartComponentProps> = ({items}) => {
                     </ul>
                     {data.items?.map(i =>
                         <div key={i.title} className={styles.cartPrice}>
-                            <CartItemComponent productId={i.productId} imageUrl={i.imageUrl} title={i.title}/>
+                            <CartItemComponent  productId={i.productId} imageUrl={i.imageUrl} title={i.title}/>
                             <div className={styles.count}>
-                                <Count count = {i.quantity}/>
+                                <Count id={i.productId} count = {i.quantity}/>
                             </div>
                             <p className={styles.text}>$ {i.price}</p>
                             <p className={styles.text}>$ {i.subTotalPrice}</p>
                         </div>)}
                 </div>
-                <button>
-                    Continue shopping
-                </button>
+               <Link href={'/'}>
+                   <button>
+                       Continue shopping
+                   </button>
+               </Link>
             </div>
             <div className={styles.orderInfo}>
                 <p className={styles.orderTitle}>Order summary</p>
                 <div className={styles.subtitle}>
-                    <p className={styles.subtitleLeft}>3 ITEMS</p>
-                    <p className={styles.subtitleRight}>$ {data.totalPrice}</p>
+                    <p className={styles.subtitleLeft}>{totalCount} ITEMS</p>
+                    <p className={styles.subtitleRight}>$ {totalPrice}</p>
                 </div>
                 <div className={styles.shipping}>
                     <div>
@@ -62,7 +67,7 @@ export const CartComponent: React.FC<CartComponentProps> = ({items}) => {
                 </div>
                 <div className={styles.subtitle}>
                     <p className={styles.subtitleLeft}>Total amount</p>
-                    <p className={styles.subtitleRight}>$ {data.totalPrice}</p>
+                    <p className={styles.subtitleRight}>$ {totalPrice}</p>
                 </div>
                 <div className={styles.continues}>
                     Continue

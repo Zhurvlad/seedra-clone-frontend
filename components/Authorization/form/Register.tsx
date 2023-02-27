@@ -26,7 +26,7 @@ export const Register:React.FC<RegisterProps> = ({setOnLogin}) => {
     });
 
     const onSubmit = async (dto: CreateUserDto) => {
-    console.log(dto)
+
 
         try{
             const data = await Api().user.register(dto)

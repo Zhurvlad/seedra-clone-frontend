@@ -4,6 +4,7 @@ import {RootState} from "../store";
 import {IItems, IMeta} from "../../models/IItems";
 import {HYDRATE} from "next-redux-wrapper";
 import {ICart, ICartDto} from '../../utils/api/types';
+import {items} from "../itemsSlice";
 
 /*export type urlParamsProps = {
     searchPizza: string,
@@ -28,7 +29,13 @@ export enum StatusEnum {
 }
 
 const initialState: cartSliceProps = {
-    data: [],
+    data: {
+        items: [],
+        totalPrice: 0,
+        totalCount: 0,
+        _id: 0,
+        user: []
+    },
     status: StatusEnum.LOADING
 }
 
@@ -46,23 +53,42 @@ export const cartSlice = createSlice({
             state.data.totalCount = 0
         },
         addToCart (state, action: PayloadAction<ICartDto>) {
-            const findItem = state.data.items?.find(obj => obj.productId === action.payload.productId)
+
+
+            const findItem = state.data.items.find(obj => obj.productId === action.payload.productId)
 
             if(findItem){
                 findItem.quantity++
             } else {
                 state.data.items?.push({...action.payload})
+                state.data.totalCount 
             }
         },
         remove(state, actions: PayloadAction<number>){
           state.data.items =  state.data.items.filter(obj => obj.productId !== actions.payload)
+        },
+        plusItem(state, action: PayloadAction<number>) {
+            const findItem = state.data.items.find(obj => obj.productId === action.payload)
 
-        }
+           if(findItem){
+               findItem.quantity++
+               findItem.subTotalPrice = findItem.price * findItem.quantity
+           }
+        },
+        minusItem(state, action: PayloadAction<number>) {
+            const findItem = state.data.items.find(obj => obj.productId === action.payload)
+
+            if(findItem){
+                findItem.quantity--
+            }
+        },
 
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
-            state.data = action.payload.cart.data
+            if(state.data.items) {
+                state.data = action.payload.cart.data
+            }
         }
     }
     /* extraReducers:(builder) => {
@@ -83,6 +109,6 @@ export const cartSlice = createSlice({
 
 export const cartSelectors = (state:RootState) => state.cart
 
-export const {setCart, clearCart, addToCart, remove} = cartSlice.actions
+export const {setCart, clearCart, addToCart, remove, minusItem, plusItem} = cartSlice.actions
 
 export const cart = cartSlice.reducer

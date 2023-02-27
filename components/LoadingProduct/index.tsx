@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './LoadingProduct.module.scss'
-import {ItemsApi} from "../../utils/api/items";
+import {Api} from "../../utils/api";
+import cn from 'classnames'
+import {motion} from "framer-motion";
 
 type LoadingProductProps = {
     admin: boolean
@@ -19,18 +21,36 @@ export const LoadingProduct: React.FC<LoadingProductProps> = ({admin, setAdmin})
     const [imageUrl, setImageUrl] = React.useState('')
     const [price, setPrice] = React.useState('')
     const [description, setDescription] = React.useState('')
-    const [type, setType] = React.useState('')
     const [openTypeMenu, setOpenTypeMenu] = React.useState(false)
     const [activeType, setActiveType] = React.useState('')
+
+   const variantType = {
+        visible: {
+            opacity: 1,
+            height: 'auto'
+        },
+       hidden: {opacity: 0, height: 0}
+   }
+
+    const addProductActive = !imageUrl || !price || !description || !activeType
+
+    const clearLoadingItems = () => {
+        setActiveType('')
+        setDescription('')
+        setPrice('')
+        setImageUrl('')
+    }
 
     const onAddProduct = async () => {
         const obj = {
             imageUrl: imageUrl,
             title: description,
             price,
-            type
+            type: activeType
         }
-        await ItemsApi().addProduct(obj)
+        console.log(obj)
+        await Api().items.addProduct(obj)
+        clearLoadingItems()
 
     }
 
@@ -43,7 +63,7 @@ export const LoadingProduct: React.FC<LoadingProductProps> = ({admin, setAdmin})
         <div style={admin ? {display: "inherit"} : {display: 'none'}} className={styles.overlay}>
             <div className={styles.onLogin}>
                 <h3>Админка</h3>
-                <p>Это админка для загрузки товаров</p>
+                <p>Админка для загрузки товаров</p>
                 <div className={styles.promocode}>
                     <p>ImageUrl</p>
                     <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} type="text"
@@ -70,11 +90,11 @@ export const LoadingProduct: React.FC<LoadingProductProps> = ({admin, setAdmin})
                             <div className={styles.caret}/>
                         </div>
                     </div>
-                    <ul className={[styles.menu , openTypeMenu && styles.menuOpen].join(' ')}>
+                    <motion.ul variants={variantType} initial={'hidden'} animate={openTypeMenu ? "visible" : 'hidden'}  className={styles.menu}>
                         {availableType.map((t, i) =>
-                            <li onClick={() =>onHandleType(t)} key={t} className={activeType === t ? styles.active : ''}>{t}</li>
+                            <li  onClick={() =>onHandleType(t)} key={t} className={activeType === t ? styles.active : ''}>{t}</li>
                         )}
-                    </ul>
+                    </motion.ul>
                 </div>
                 {/*<div className={styles.promocode}>
                     <p>Type</p>
@@ -92,8 +112,11 @@ export const LoadingProduct: React.FC<LoadingProductProps> = ({admin, setAdmin})
                 <p>Repeat the password</p>
                 <input type="text" placeholder={'Repeat the password'}/>
             </div>*/}
-                <div onClick={onAddProduct} className={styles.button}>
-                    <button disabled={Boolean(!imageUrl || !price ||  !description || !activeType)} className={styles.login}>Add product</button>
+                <div  className={styles.button}>
+                    <button onClick={onAddProduct} disabled={addProductActive}  className={cn(styles.login, {
+                        [styles.disabledButton]: addProductActive,
+                        [styles.activeButton]: !addProductActive
+                    })}>Add product</button>
                 </div>
                 <img onClick={() => setAdmin(false)} src="headerIcon/closed.svg" alt="closed"/>
             </div>

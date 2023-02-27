@@ -1,7 +1,18 @@
+
+.logo{
+  width: 105px;
+  height: 29px;
+}
+
+.userLogo{
+  width: 24px;
+  height: 24px;
+}
 .header{
   margin-bottom: 50px;
   position: relative;
 }
+
 
 .headerLogo{
   transform: translateY(5px);
@@ -83,9 +94,16 @@
 }
 
 .searchIcon{
+  width: 16px;
+  height: 16px;
   position: absolute;
   left: 20px;
   top: 16px;
+}
+
+.plusSVG{
+  width: 16px;
+  height: 16px;
 }
 
 .headerCartFav{
@@ -115,6 +133,8 @@
 }
 
 .closed{
+  width: 12px;
+  height: 12px;
   right:  17px;
   top: 14px;
   position: absolute;

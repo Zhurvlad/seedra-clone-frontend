@@ -30,6 +30,8 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
     const cartData = useAppSelector(cartSelectors)
 
 
+
+
     /*  const addToCart = async (cartObj: any) => {
          const findItem = cartItems.data.items.some((obj) => obj.productId === id)
           if(!addedCart){
@@ -102,9 +104,9 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
         <div className={styles.content}>
             <div className={styles.header}>
                 <h2 className={styles.text}>Our products</h2>
-                <button className={styles.button}>
+                {/*<button className={styles.button}>
                     View all (12)
-                </button>
+                </button>*/}
             </div>
             <Category setActiveCategory={setActiveCategory} activeCategory={activeCategory}/>
 
@@ -124,7 +126,7 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
 
 
             {activeCategory === 0 &&
-            <Pagination setCurrentPage={setCurrentPage} totalPage={meta.totalPages} currentPage={currentPage}
+            <Pagination setCurrentPage={setCurrentPage} totalPage={meta?.totalPages} currentPage={currentPage}
                         onNextPage={onNextPage} onPrevPage={onPrevPage}/>
             }
 

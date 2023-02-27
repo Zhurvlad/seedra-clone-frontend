@@ -18,4 +18,23 @@
   img{
     cursor: pointer;
   }
+
+  svg{
+    cursor: pointer;
+  }
+}
+
+.blackMinus{
+  cursor: not-allowed;
+  svg{
+    cursor: not-allowed;
+    path {
+      stroke: black;
+    }
+  }
+}
+
+.plusSVG{
+  width: 16px;
+  height: 16px;
 }
