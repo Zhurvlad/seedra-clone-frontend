@@ -37,8 +37,8 @@ export const Register:React.FC<RegisterProps> = ({setOnLogin}) => {
             })
             setErrorMessage('')
          setOnLogin('')
-        } catch (e) {
-            setErrorMessage(e.response?.data.message)
+        } catch (error) {
+            setErrorMessage(error.response?.data.message)
         }
     }
 

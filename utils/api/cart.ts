@@ -25,7 +25,7 @@ export const CartApi = (instance: AxiosInstance) => (
             return data
         },
 
-        async getUserCart(): Promise<ICart[]> {
+        async getUserCart(): Promise<ICart> {
             const {data} = await instance.get('/cart')
             return data
         },

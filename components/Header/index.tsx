@@ -21,6 +21,8 @@ import UserLogoSVG from './user.svg'
 import SearchSVG from './headerSearch.svg'
 import PlusSVG from './plus.svg'
 import ClosedSVG from './closed.svg'
+import AddedCartSVG from './addedCart.svg'
+import NullCartSVG from './nullCart.svg'
 
 import styles from './Header.module.scss'
 
@@ -28,7 +30,6 @@ import styles from './Header.module.scss'
 
 
 export const Header: React.FC = () => {
-    const [notNullFavorite, setNotNullFavorite] = React.useState(false)
     const [visibleWindowCart, setVisibleWindowCart] = React.useState(false)
     const [active, setActive] = React.useState<boolean>(false)
     const [items, setItems] = React.useState<IItems[]>([])
@@ -40,16 +41,14 @@ export const Header: React.FC = () => {
     const {data} = useAppSelector(cartSelectors)
     const [searchCount, setSearchCount] = React.useState<number>(0)
 
+    const router = useRouter()
+
+    console.log(router.pathname === '/items/[id]')
+
     const {onClearCart} = useContext(AppContext)
 
 
-    React.useEffect(() => {
-        (async () => {
-            const userData = await Api().user.getMe()
-        })()
-    }, [])
-
-    const cartRef = useRef<HTMLImageElement>(null)
+    const cartRef = useRef<HTMLDivElement & HTMLLIElement>(null)
     const searchRef = useRef<HTMLDivElement>(null)
     const cartRoute = useRouter()
 
@@ -171,28 +170,28 @@ export const Header: React.FC = () => {
                         </div>
                     </div>
                     <ul className={styles.headerCartFav}>
-                        <li>
+                        {/*<li>
                             <img onClick={() => setNotNullFavorite(!notNullFavorite)}
                                  src={notNullFavorite ? 'headerIcon/addedHeart.svg' : "headerIcon/nullFavorite.svg"}
                                  alt="search"/>
-                        </li>
+                        </li>*/}
 
-                        <li className={styles.headerCart}>
+                        <li ref={cartRef} onMouseEnter={onVisibleWindowCart} className={styles.headerCart}>
                             <Link href={'/cart'}>
-                                <img ref={cartRef} onMouseEnter={onVisibleWindowCart}
-                                     src={data.totalCount !== 0 ? 'headerIcon/addedCart.svg' : "headerIcon/nullCart.svg"}
-                                     alt="search"/>
+                                {data.totalCount !== 0 ? <AddedCartSVG className={styles.svgSize}/> : <NullCartSVG className={styles.svgSize}/>}
                             </Link>
                         </li>
-
-
-                        {!data.user && <li onClick={() => setOnLogin('main')}>
-                            <UserLogoSVG className={styles.userLogo}/>
-                        </li>}
-
-                        <li onClick={() => setAdmin(!admin)} style={{marginLeft: '10px'}}>
-                            <PlusSVG className={styles.plusSVG}/>
+                        <li onClick={() => setOnLogin('main')}>
+                            <UserLogoSVG className={styles.svgSize}/>
                         </li>
+
+                       {/* {!data.user && <li onClick={() => setOnLogin('main')}>
+                            <UserLogoSVG className={styles.svgSize}/>
+                        </li>}*/}
+
+                        {router.pathname !== '/items/[id]' ? <li onClick={() => setAdmin(!admin)} style={{marginLeft: '10px'}}>
+                            <PlusSVG className={styles.plusSVG}/>
+                        </li> : ''}
                     </ul>
                 </div>
 

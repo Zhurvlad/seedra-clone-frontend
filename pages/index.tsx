@@ -10,13 +10,11 @@ import {setCart} from '../redux/cartSlice';
 import {withLayout} from "../layout/Layout";
 
 interface HomeProps {
-    items: IDataDto,
-    userCart: null
+    data: IDataDto,
 }
 
-const Home: NextPage<HomeProps> = ({items, userCart}): JSX.Element => {
+const Home: NextPage<HomeProps> = ({data}): JSX.Element => {
 
-    console.log(userCart)
 
     return (
         <div>
@@ -33,7 +31,8 @@ const Home: NextPage<HomeProps> = ({items, userCart}): JSX.Element => {
 
 
             <div>
-                <Content meta={items?.meta} items={items?.items}/>
+
+                <Content meta={data.meta} items={data.items}/>
             </div>
         </div>
 
@@ -45,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
     try {
 
-        const items = await Api().items.getAll()
+        const data = await Api().items.getAll()
 
         const userData = await Api(ctx).user.getMe()
         const userCart = await Api(ctx).cart.getUserCart()
@@ -53,12 +52,13 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 
         store.dispatch(setCart(userCart))
         store.dispatch(setUserData(userData))
-        store.dispatch(setItems(items.items))
-        store.dispatch(setMeta(items.meta))
+        store.dispatch(setItems(data.items))
+        store.dispatch(setMeta(data.meta))
+
 
         return {
             props: {
-                items,
+                data,
                 userData,
                 userCart
             }
@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
     }
     return {
         props: {
-            items: null
+            data: null
         }
     }
 

@@ -7,6 +7,9 @@ interface FullProductProps {
 }
 
 export const FullProduct:React.FC<FullProductProps> = ({items}) => {
+
+
+
     return (
         <div >
             <div className={styles.fullPage}>
@@ -20,7 +23,7 @@ export const FullProduct:React.FC<FullProductProps> = ({items}) => {
                    </div>
                     <div className={styles.rightBlockBottom}>
                         <p>
-                            {items.price}
+                            $ {items.price}
                         </p>
                         <div className={styles.addToCart}>
                             Add to cart

@@ -16,6 +16,8 @@ const Cart:NextPage<CartProps> = ({items}) => {
 
 
 
+
+
     return<div >
 
         <CartComponent items={items}/>

@@ -3,9 +3,10 @@ import styles from "./CartItemComponent.module.scss";
 import {Api} from '../../utils/api';
 import {remove} from '../../redux/cartSlice';
 import {useAppDispatch} from '../../redux/hooks';
+import ClosedRedSVG from './closedRed.svg'
 
 type CartItemComponent = {
-    children: ReactNode,
+    children?: ReactNode,
     title: string,
     imageUrl: string,
     productId: number
@@ -26,7 +27,7 @@ export const CartItemComponent:React.FC<CartItemComponent> = ({children, title, 
 
     return (
         <div className={styles.windowItem}>
-            <img onClick={removeCartItem} className={styles.closedRed} src="headerIcon/closedRed.svg" alt=""/>
+            <ClosedRedSVG onClick={removeCartItem} className={styles.closedRed}/>
             <img  className={styles.img} src={imageUrl} alt=""/>
             <div>
                 <p>{title.length > 120 ? `${title} + '...'` : title}</p>

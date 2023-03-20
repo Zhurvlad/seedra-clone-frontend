@@ -31,7 +31,7 @@ export interface IMeta {
 }
 
 export interface IDataDto {
-    items: IItemsDto[],
+    items: IItems[],
     meta: IMeta[]
 }
 
@@ -48,7 +48,7 @@ export interface ICartDto {
     imageUrl: string,
     price: number,
     quantity: number,
-    subTotalPrice: number
+    subTotalPrice?: number
 }
 
 

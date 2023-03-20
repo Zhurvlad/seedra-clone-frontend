@@ -17,6 +17,8 @@ export const Api = (ctx?: NextPageContext | GetServerSidePropsContext): ApiRetur
     const cookies = ctx ? Cookies.get(ctx) : parseCookies()
     const token = cookies.seedra
 
+
+
     const instance = axios.create({
         baseURL: 'http://localhost:8888/',
         headers: {

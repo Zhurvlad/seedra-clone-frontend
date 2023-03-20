@@ -1,35 +1,28 @@
-import React, {useContext} from 'react';
-import styles from './CardItem.module.scss'
+import React, {ForwardedRef, forwardRef, useContext} from 'react';
+import Link from 'next/link';
+
 import {Api} from '../../utils/api';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {addToCart, cartSelectors, remove} from '../../redux/cartSlice';
-import Link from 'next/link';
 import {AppContext} from "../../context/app.context";
 
+import YellowStarSVG from './yellowStar.svg'
 
+import styles from './CardItem.module.scss'
 
 type CartItemProps = {
     imageUrl: string,
     price: string,
     title: string
     id: number,
-    items: any,
 }
 
 
-export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, items,}) => {
+export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Element => {
     const {data} = useAppSelector(cartSelectors)
     const findItemFromCart = data.items?.some((obj) => obj.productId === id)
-    const {nullCart} = useContext(AppContext)
-    const [addedFavorite, setAddedFavorite] = React.useState(false)
-  /*  const [addedCart, setAddedCart] = React.useState(nullCart)*/
-  /*  const [addedCart, setAddedCart] = React.useState(findItemFromCart)*/
-
-
-
 
     const dispatch = useAppDispatch()
-
 
     const addItemToCart = async (id: number) => {
         if (!findItemFromCart) {
@@ -37,9 +30,10 @@ export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, i
                 title: title,
                 imageUrl: imageUrl,
                 productId: id,
-                price: price,
+                price: Number(price),
                 quantity: 1
             }
+
             await Api().cart.addToCart(cartObj)
             dispatch(addToCart(cartObj))
         } else {
@@ -49,10 +43,8 @@ export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, i
         }
     }
 
-
-
     return (
-        <div className={styles.card}>
+        <div  className={styles.card} >
             <div className={styles.cardItem}>
                 <Link href={`/items/${id}`}>
                     <div>
@@ -62,18 +54,14 @@ export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, i
                         <h5 className={styles.text}>
                             {title.length > 120 ? `${title.slice(0, 120)}  ...` : title}
                         </h5>
-                        <div onClick={() => setAddedFavorite(!addedFavorite)} className={styles.heart}>
+                        {/*<div onClick={() => setAddedFavorite(!addedFavorite)} className={styles.heart}>
                             <img src={addedFavorite ? "headerIcon/yellowHeartAdded.svg" : "headerIcon/yellowHeart.svg"}
                                  alt=""/>
-                        </div>
+                        </div>*/}
                     </div>
                 </Link>
                 <div className={styles.rating}>
-                    <img src="headerIcon/yellowStar.svg" alt=""/>
-                    <img src="headerIcon/yellowStar.svg" alt=""/>
-                    <img src="headerIcon/yellowStar.svg" alt=""/>
-                    <img src="headerIcon/yellowStar.svg" alt=""/>
-                    <img src="headerIcon/yellowStar.svg" alt=""/>
+                    {Array(5).fill(<YellowStarSVG className={styles.yellowStar}/>)}
                     <p>(123)</p>
                 </div>
                 <div className={styles.p}>
@@ -87,5 +75,4 @@ export const CardItem: React.FC<CartItemProps> = ({title, id, imageUrl, price, i
             </div>
         </div>
     );
-};
-
+}
