@@ -3,6 +3,7 @@ import styles from "./Count.module.scss";
 import {useAppDispatch} from '../../redux/hooks';
 import {minusItem, plusItem } from '../../redux/cartSlice';
 import PlusSVg from './plus.svg'
+import {Api} from "../../utils/api";
 
 type ICount = {
     count: number,
@@ -12,13 +13,17 @@ type ICount = {
 export const Count:React.FC<ICount> = ({count, id}) => {
     const dispatch = useAppDispatch()
 
-    const onPlusItem = (id: number) => {
+
+
+    const onPlusItem = async (id: number) => {
         dispatch(plusItem(id))
+      await  Api().cart.plusItem(id)
     }
 
-    const onMinusItem = (id: number) => {
+    const onMinusItem = async (id: number) => {
        if(count !== 1){
            dispatch(minusItem(id))
+         await  Api().cart.minusItem(id)
        }
     }
 

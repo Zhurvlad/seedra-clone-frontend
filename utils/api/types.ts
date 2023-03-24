@@ -48,7 +48,7 @@ export interface ICartDto {
     imageUrl: string,
     price: number,
     quantity: number,
-    subTotalPrice?: number
+    subTotalPrice: number
 }
 
 

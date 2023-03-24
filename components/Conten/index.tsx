@@ -96,9 +96,6 @@ export const Content: React.FC<ContentProps> = ({items, meta}) => {
         <div className={styles.content}>
             <div className={styles.header}>
                 <h2 className={styles.text}>Our products</h2>
-                {/*<button className={styles.button}>
-                    View all (12)
-                </button>*/}
 
             </div>
             <Category setActiveCategory={setActiveCategory} activeCategory={activeCategory}/>

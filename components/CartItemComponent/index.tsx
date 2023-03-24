@@ -15,9 +15,10 @@ type CartItemComponent = {
 export const CartItemComponent:React.FC<CartItemComponent> = ({children, title, imageUrl, productId}) => {
     const dispatch = useAppDispatch()
 
+    const textReduction = title.length > 120 ? `${title.slice(0, 120)}  ...` : title
+
     const removeCartItem = async () => {
         try {
-
             await Api().cart.remove(productId)
             dispatch(remove(productId))
         } catch (e) {
@@ -30,7 +31,7 @@ export const CartItemComponent:React.FC<CartItemComponent> = ({children, title, 
             <ClosedRedSVG onClick={removeCartItem} className={styles.closedRed}/>
             <img  className={styles.img} src={imageUrl} alt=""/>
             <div>
-                <p>{title.length > 120 ? `${title} + '...'` : title}</p>
+                <p>{textReduction}</p>
                 {children}
             </div>
         </div>

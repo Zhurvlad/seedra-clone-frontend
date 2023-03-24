@@ -1,0 +1,28 @@
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+
+}
+
+.main{
+  min-height: 100%;
+}
+
+.footer{
+  margin-top: auto;
+}
+
+.boxshadowTop{
+  top: 0;
+  box-shadow: 0px 4px 12px rgb(207 207 207 / 25%);
+  position: relative;
+  z-index: 61;
+
+}
+
+.boxshadowBottom{
+  box-shadow: 0 4px 12px rgb(207 207 207 / 25%);
+  position: relative;
+  z-index: 61;
+}

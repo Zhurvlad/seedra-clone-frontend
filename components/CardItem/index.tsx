@@ -1,14 +1,14 @@
-import React, {ForwardedRef, forwardRef, useContext} from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 import {Api} from '../../utils/api';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {addToCart, cartSelectors, remove} from '../../redux/cartSlice';
-import {AppContext} from "../../context/app.context";
 
 import YellowStarSVG from './yellowStar.svg'
 
 import styles from './CardItem.module.scss'
+import {ICartDto} from "../../utils/api/types";
 
 type CartItemProps = {
     imageUrl: string,
@@ -21,6 +21,8 @@ type CartItemProps = {
 export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Element => {
     const {data} = useAppSelector(cartSelectors)
     const findItemFromCart = data.items?.some((obj) => obj.productId === id)
+    const textReduction = title.length > 120 ? `${title.slice(0, 120)}  ...` : title
+
 
     const dispatch = useAppDispatch()
 
@@ -31,11 +33,12 @@ export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Elemen
                 imageUrl: imageUrl,
                 productId: id,
                 price: Number(price),
-                quantity: 1
+                quantity: 1,
+
             }
 
-            await Api().cart.addToCart(cartObj)
-            dispatch(addToCart(cartObj))
+            await Api().cart.addToCart(cartObj as ICartDto )
+            dispatch(addToCart(cartObj as ICartDto))
         } else {
             await Api().cart.remove(id)
             dispatch(remove(id))
@@ -52,7 +55,7 @@ export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Elemen
                             <img src={imageUrl} alt="Seedra Cilantro Seeds for Planting Indoor and Outdoor"/>
                         </div>
                         <h5 className={styles.text}>
-                            {title.length > 120 ? `${title.slice(0, 120)}  ...` : title}
+                            {textReduction}
                         </h5>
                         {/*<div onClick={() => setAddedFavorite(!addedFavorite)} className={styles.heart}>
                             <img src={addedFavorite ? "headerIcon/yellowHeartAdded.svg" : "headerIcon/yellowHeart.svg"}

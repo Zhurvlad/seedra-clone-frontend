@@ -7,6 +7,8 @@
 .svgSize{
   width: 24px;
   height: 24px;
+  cursor: pointer;
+
 }
 .header{
   margin-bottom: 50px;
@@ -104,6 +106,7 @@
 .plusSVG{
   width: 16px;
   height: 16px;
+  cursor: pointer;
 }
 
 .headerCartFav{
@@ -141,12 +144,13 @@
   cursor: pointer;
 }
 .windowItems{
-  padding: 35px 18px 17px 18px;
+  padding: 35px 18px 0 18px;
+  margin-bottom: 20px;
 }
 
 .windowCartItem{
   display: flex;
-
+  padding-bottom: 15px;
   border-bottom: 1px solid #EFEFEF;
 }
 

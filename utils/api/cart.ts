@@ -39,13 +39,19 @@ export const CartApi = (instance: AxiosInstance) => (
         async clearCart() {
             await instance.delete(`/cart/clear`,)
         },
-        async search(query: SearchItemsDto) {
+        async plusItem(productId: number){
+            await instance.patch(`/cart/plus/${productId}`)
+        },
+        async minusItem(productId: number){
+            await instance.patch(`/cart/minus/${productId}`)
+        }
+        /*async search(query: SearchItemsDto) {
             const {data} = await instance.get<{ items: IItemsDto[] }>(`/items/search`, {params: query})
             return data
         },
         async addProduct(dto: IAddItems) {
             const {data} = await instance.post<IAddItems>(`/items`, dto)
             return data
-        },
+        },*/
     }
 )

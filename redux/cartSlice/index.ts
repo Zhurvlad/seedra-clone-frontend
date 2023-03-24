@@ -39,54 +39,64 @@ const initialState: cartSliceProps = {
     status: StatusEnum.LOADING
 }
 
+
 export const cartSlice = createSlice({
     name: 'cartSlice',
     initialState,
     reducers: {
-        setCart (state, action: PayloadAction<ICart>) {
+        setCart(state, action: PayloadAction<ICart>) {
             state.data = action.payload
 
         },
-        clearCart (state) {
+        clearCart(state) {
             state.data.items = []
             state.data.totalPrice = 0
             state.data.totalCount = 0
         },
-        addToCart (state, action: PayloadAction<ICartDto>) {
+        addToCart(state, action: PayloadAction<ICartDto>) {
 
 
             const findItem = state.data.items.find(obj => obj.productId === action.payload.productId)
 
-            if(findItem){
+            if (findItem) {
                 findItem.quantity++
             } else {
                 state.data.items?.push({...action.payload})
-                state.data.totalCount 
+                state.data.totalCount = state.data.items.reduce((sum, obj) => sum + obj.quantity, 0)
             }
+
+
         },
-        remove(state, actions: PayloadAction<number>){
-          state.data.items =  state.data.items.filter(obj => obj.productId !== actions.payload)
+        remove(state, actions: PayloadAction<number>) {
+            state.data.items = state.data.items.filter(obj => obj.productId !== actions.payload)
+            state.data.totalCount = state.data.items.reduce((sum, obj) => sum + obj.quantity, 0)
+            state.data.totalPrice = state.data.items.reduce((sum, obj) => sum + obj.subTotalPrice, 0)
         },
         plusItem(state, action: PayloadAction<number>) {
             const findItem = state.data.items.find(obj => obj.productId === action.payload)
 
-           if(findItem){
-               findItem.quantity++
-               findItem.subTotalPrice = findItem.price * findItem.quantity
-           }
+            if (findItem) {
+                findItem.quantity++
+                findItem.subTotalPrice = findItem.price * findItem.quantity
+                state.data.totalCount = state.data.items.reduce((sum, obj) => sum + obj.quantity, 0)
+                state.data.totalPrice = state.data.items.reduce((sum, obj) => sum + obj.subTotalPrice, 0)
+            }
         },
         minusItem(state, action: PayloadAction<number>) {
             const findItem = state.data.items.find(obj => obj.productId === action.payload)
 
-            if(findItem){
+            if (findItem) {
                 findItem.quantity--
+                findItem.subTotalPrice = findItem.price * findItem.quantity
+                state.data.totalPrice = state.data.items.reduce((sum, obj) => sum + obj.subTotalPrice, 0)
+                state.data.totalCount = state.data.items.reduce((sum, obj) => sum + obj.quantity, 0)
             }
         },
 
     },
     extraReducers: {
         [HYDRATE]: (state, action) => {
-            if(state.data.items) {
+            if (state.data.items) {
                 state.data = action.payload.cart.data
             }
         }
@@ -107,7 +117,7 @@ export const cartSlice = createSlice({
      }*/
 })
 
-export const cartSelectors = (state:RootState) => state.cart
+export const cartSelectors = (state: RootState) => state.cart
 
 export const {setCart, clearCart, addToCart, remove, minusItem, plusItem} = cartSlice.actions
 

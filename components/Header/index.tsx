@@ -25,8 +25,7 @@ import AddedCartSVG from './addedCart.svg'
 import NullCartSVG from './nullCart.svg'
 
 import styles from './Header.module.scss'
-
-
+import {selectUserData} from "../../redux/userSlice";
 
 
 export const Header: React.FC = () => {
@@ -39,11 +38,11 @@ export const Header: React.FC = () => {
     const [onLogin, setOnLogin] = React.useState('')
     const [admin, setAdmin] = React.useState(false)
     const {data} = useAppSelector(cartSelectors)
+    const user = useAppSelector(selectUserData)
     const [searchCount, setSearchCount] = React.useState<number>(0)
 
-    const router = useRouter()
 
-    console.log(router.pathname === '/items/[id]')
+    const router = useRouter()
 
     const {onClearCart} = useContext(AppContext)
 
@@ -66,11 +65,11 @@ export const Header: React.FC = () => {
 
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            //Типизация скрытия попапа если клик был произведён вне области попапа'
+            //Типизация скрытия попапа если клик был произведён вне области попапа
             const _event = event as MouseEvent & {
                 path: Node[]
             }
-            if (cartRef.current && !_event.path?.includes(cartRef.current)) {
+            if (cartRef.current && !cartRef.current?.contains(_event.target as Node)) {
                 setVisibleWindowCart(false)
             }
 
@@ -110,15 +109,12 @@ export const Header: React.FC = () => {
     }
 
 
-
-
-
     return (
         <div className={styles.header}>
             <div className={styles.headerTop}>
                 <div className={styles.headerLogo}>
                     <Link href={'/'}>
-                        <MainLogoSVG  className={styles.logo}/>
+                        <MainLogoSVG className={styles.logo}/>
                     </Link>
                 </div>
                 {/* <nav className={styles.menu}>
@@ -150,8 +146,9 @@ export const Header: React.FC = () => {
                                placeholder={'Search'}/>
                         <SearchSVG className={styles.searchIcon}/>
                         {isLoading &&
-                        <img className={styles.loading} src="https://seedra.us/wp-content/uploads/2021/12/spinner.gif"
-                             alt="Loading"/>}
+                            <img className={styles.loading}
+                                 src="https://seedra.us/wp-content/uploads/2021/12/spinner.gif"
+                                 alt="Loading"/>}
 
                         <div
                             className={[styles.searchList, active && searchValue.length !== 0 && styles.searchListActive].join(' ')}>
@@ -160,7 +157,7 @@ export const Header: React.FC = () => {
                                     <Link key={obj.id} href={`/items/${obj.id}`}>
                                         <div>
                                             <img src={obj.imageUrl} alt="Img"/>
-                                            <p>{searchValue && obj.title}</p>
+                                            <p>{searchValue && obj.title.length > 120 ? `${obj.title.slice(0, 120)} ...` : obj.title}</p>
                                         </div>
                                     </Link>
                                 ))
@@ -178,20 +175,22 @@ export const Header: React.FC = () => {
 
                         <li ref={cartRef} onMouseEnter={onVisibleWindowCart} className={styles.headerCart}>
                             <Link href={'/cart'}>
-                                {data.totalCount !== 0 ? <AddedCartSVG className={styles.svgSize}/> : <NullCartSVG className={styles.svgSize}/>}
+                                {data.totalCount !== 0 ? <AddedCartSVG className={styles.svgSize}/> :
+                                    <NullCartSVG className={styles.svgSize}/>}
                             </Link>
                         </li>
-                        <li onClick={() => setOnLogin('main')}>
+                        {!user && <li className={styles.headerCart} onClick={() => setOnLogin('main')}>
                             <UserLogoSVG className={styles.svgSize}/>
-                        </li>
+                        </li>}
 
-                       {/* {!data.user && <li onClick={() => setOnLogin('main')}>
+                        {/* {!data.user && <li onClick={() => setOnLogin('main')}>
                             <UserLogoSVG className={styles.svgSize}/>
                         </li>}*/}
 
-                        {router.pathname !== '/items/[id]' ? <li onClick={() => setAdmin(!admin)} style={{marginLeft: '10px'}}>
-                            <PlusSVG className={styles.plusSVG}/>
-                        </li> : ''}
+                        {router.pathname !== '/items/[id]' ?
+                            <li onClick={() => setAdmin(!admin)} style={{marginLeft: '10px'}}>
+                                <PlusSVG className={styles.plusSVG}/>
+                            </li> : ''}
                     </ul>
                 </div>
 
@@ -203,41 +202,41 @@ export const Header: React.FC = () => {
 
                 {admin && <LoadingProduct setAdmin={setAdmin} admin={admin}/>}
 
-                {visibleWindowCart && data.totalCount !== 0 &&
-                <div ref={cartRef} className={styles.windowCart}>
-                    <ClosedSVG onClick={onClosePopupCart} className={styles.closed}/>
-                    {data.totalCount === 0 ?
-                        <div className={styles.emptyCart}>
-                            <img src="https://dodopizza-a.akamaihd.net/site-static/dist/121df529925b0f43cc73.svg"
-                                 alt="Dog"/>
-                            <h2>Oh it's empty!</h2>
-                            <p>Your shopping cart is empty, add your favorite products to the cart.</p>
-                        </div>
-                        : <div>
-                            <div className={styles.windowItems}>
-                                {data.items?.map(obj =>
-                                    <div key={obj.productId} className={styles.windowCartItem}>
-                                        <CartItemComponent
-                                            imageUrl={obj.imageUrl}
-                                            productId={obj.productId}
-                                            title={obj.title}>
-                                            <div className={styles.price}>
-                                                <p className={styles.pack}>1 pack</p>
-                                                <p className={styles.priceText}>$24.56</p>
-                                            </div>
-                                        </CartItemComponent>
-                                        <Count id={obj.productId} count={obj.quantity}/>
-                                    </div>
-                                )}
+                {visibleWindowCart &&
+                    <div ref={cartRef} className={styles.windowCart}>
+                        <ClosedSVG onClick={onClosePopupCart} className={styles.closed}/>
+                        {data.totalCount === 0 ?
+                            <div className={styles.emptyCart}>
+                                <img src="https://dodopizza-a.akamaihd.net/site-static/dist/121df529925b0f43cc73.svg"
+                                     alt="Dog"/>
+                                <h2>Oh it's empty!</h2>
+                                <p>Your shopping cart is empty, add your favorite products to the cart.</p>
                             </div>
-                            <div className={styles.payment}>
-                                <p onClick={onClearCart} className={styles.clear}>Clear</p>
-                                <Link href={'/cart'}>
-                                    <p className={styles.pay}>Proceed to payment</p>
-                                </Link>
-                            </div>
-                        </div>}
-                </div>}
+                            : <div>
+                                <div className={styles.windowItems}>
+                                    {data.items?.map(obj =>
+                                        <div key={obj.productId} className={styles.windowCartItem}>
+                                            <CartItemComponent
+                                                imageUrl={obj.imageUrl}
+                                                productId={obj.productId}
+                                                title={obj.title}>
+                                                <div className={styles.price}>
+                                                    <p className={styles.pack}>{obj.quantity} pack</p>
+                                                    <p className={styles.priceText}>$ {obj.price}</p>
+                                                </div>
+                                            </CartItemComponent>
+                                            <Count id={obj.productId} count={obj.quantity}/>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className={styles.payment}>
+                                    <p onClick={onClearCart} className={styles.clear}>Clear</p>
+                                    <Link href={'/cart'}>
+                                        <p className={styles.pay}>Proceed to payment</p>
+                                    </Link>
+                                </div>
+                            </div>}
+                    </div>}
 
             </div>
         </div>

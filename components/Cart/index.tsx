@@ -7,23 +7,16 @@ import {cartSelectors} from '../../redux/cartSlice';
 import {CartItemComponent} from "../CartItemComponent";
 import {Count} from "../Count";
 
-
-
 import styles from './Cart.module.scss'
 import {Order} from "../Order";
 
 
 export const CartComponent: React.FC = () => {
-
-
     const {data} = useAppSelector(cartSelectors)
 
-
-    const totalPrice = data.items.map((m) => m.subTotalPrice).reduce((sum, price) => sum + price, 0)
+    //TODO: МБ тут будет ошибка
+    const totalPrice = data.items.map((m) => m.subTotalPrice ? m.subTotalPrice : 0).reduce((sum, price) => sum + price, 0)
     const totalCount = data.items.map((m) => m.quantity).reduce((sum, price) => sum + price, 0)
-
-    console.log(totalPrice, totalCount)
-
 
     return (
         <div className={styles.cart}>
