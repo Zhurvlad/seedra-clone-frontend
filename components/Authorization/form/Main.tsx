@@ -1,11 +1,14 @@
 import React from 'react';
+
 import styles from "../Authorization.module.scss";
+
+import ClosedSVG from "./closed.svg";
 
 type MainProps = {
     setOnLogin: (s: string) => void
 }
 
-export const Main:React.FC<MainProps> = ({setOnLogin}) => {
+export const Main: React.FC<MainProps> = ({setOnLogin}) => {
     return (
         <div className={styles.authorization}>
             <h3>Необходима авторизация</h3>
@@ -16,7 +19,8 @@ export const Main:React.FC<MainProps> = ({setOnLogin}) => {
                         className={styles.registration}>Зарегестрироваться
                 </button>
             </div>
-            <img onClick={() => setOnLogin('')} src="headerIcon/closed.svg" alt="closed"/>
+            <ClosedSVG className={styles.closedSVG} onClick={() => setOnLogin('')}/>
+            {/*<img onClick={() => setOnLogin('')} src="headerIcon/closed.svg" alt="closed"/>*/}
         </div>
     );
 };

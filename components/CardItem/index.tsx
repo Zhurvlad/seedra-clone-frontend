@@ -4,11 +4,13 @@ import Link from 'next/link';
 import {Api} from '../../utils/api';
 import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import {addToCart, cartSelectors, remove} from '../../redux/cartSlice';
-
-import YellowStarSVG from './yellowStar.svg'
+import {ICartDto} from "../../utils/api/types";
 
 import styles from './CardItem.module.scss'
-import {ICartDto} from "../../utils/api/types";
+
+import YellowStarSVG from './yellowStar.svg'
+import WhiteCartSVG from './whiteCart.svg'
+import GreenCartSVG from './cartSimple.svg'
 
 type CartItemProps = {
     imageUrl: string,
@@ -17,8 +19,8 @@ type CartItemProps = {
     id: number,
 }
 
-
 export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Element => {
+
     const {data} = useAppSelector(cartSelectors)
     const findItemFromCart = data.items?.some((obj) => obj.productId === id)
     const textReduction = title.length > 120 ? `${title.slice(0, 120)}  ...` : title
@@ -27,23 +29,25 @@ export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Elemen
     const dispatch = useAppDispatch()
 
     const addItemToCart = async (id: number) => {
-        if (!findItemFromCart) {
-            const cartObj = {
-                title: title,
-                imageUrl: imageUrl,
-                productId: id,
-                price: Number(price),
-                quantity: 1,
+       try {
+           if (!findItemFromCart) {
+               const cartObj = {
+                   title: title,
+                   imageUrl: imageUrl,
+                   productId: id,
+                   price: Number(price),
+                   quantity: 1,
+               }
 
-            }
-
-            await Api().cart.addToCart(cartObj as ICartDto )
-            dispatch(addToCart(cartObj as ICartDto))
-        } else {
-            await Api().cart.remove(id)
-            dispatch(remove(id))
-
-        }
+               await Api().cart.addToCart(cartObj as ICartDto )
+               dispatch(addToCart(cartObj as ICartDto))
+           } else {
+               await Api().cart.remove(id)
+               dispatch(remove(id))
+           }
+       } catch (e){
+           console.log('Произошла ошибка при добавлении продукта')
+       }
     }
 
     return (
@@ -64,14 +68,14 @@ export const CardItem= ({title, id, imageUrl, price}: CartItemProps): JSX.Elemen
                     </div>
                 </Link>
                 <div className={styles.rating}>
-                    {Array(5).fill(<YellowStarSVG className={styles.yellowStar}/>)}
+                    {Array(5).fill(<YellowStarSVG className={styles.size24}/>)}
                     <p>(123)</p>
                 </div>
                 <div className={styles.p}>
                     <div className={styles.price}>
                         <p>${price}</p>
                         <div onClick={() => addItemToCart(id)} className={findItemFromCart  ? styles.active : styles.priceCart}>
-                            <img src={findItemFromCart ? 'headerIcon/whiteCart.svg' : "headerIcon/cartSimple.svg"} alt="cart"/>
+                            {findItemFromCart ? <WhiteCartSVG className={styles.size32}/> : <GreenCartSVG className={styles.size32}/>}
                         </div>
                     </div>
                 </div>

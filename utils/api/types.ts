@@ -51,9 +51,10 @@ export interface ICartDto {
     subTotalPrice: number
 }
 
-
+//TODO: Мб надо будет удалить
 export type CreateUserDto = {
     fullName: string,
+    role?: string,
 } & LoginDto & 'user'
 
 export type LoginDto = {

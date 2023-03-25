@@ -1,11 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import {wrapper} from "../redux/store";
-import {UserApi} from '../utils/api/users';
-import {Api} from '../utils/api';
-import { setUserData } from '../redux/userSlice';
-import {setItems} from '../redux/itemsSlice';
-import {GetServerSideProps} from 'next';
 
 
 function App({ Component, pageProps }: AppProps) {

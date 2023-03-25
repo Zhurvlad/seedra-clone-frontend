@@ -1,14 +1,23 @@
 import React, {DetailedHTMLProps, HTMLAttributes} from 'react';
+
+import AllSVG from './treeLeaf.svg'
+import BundlesSVG from './bread.svg'
+import HerbsSVG from './oakLeaf.svg'
+import VegetablesSVG from './potato.svg'
+import FruitsSVG from './strawsberry.svg'
+import SuppliesSVG from './tableware.svg'
+import FlowersSVG from './flower.svg'
+
 import styles from "./Category.module.scss";
 
 export const availableCategory = [
-    {name: 'All', url: 'headerIcon/treeLeaf.svg'},
-    {name: 'BUNDLES', url: 'headerIcon/bread.svg'},
-    {name: 'HERBS', url: 'headerIcon/oakLeaf.svg'},
-    {name: 'VEGETABLES', url: 'headerIcon/potato.svg'},
-    {name: 'FRUITS', url: 'headerIcon/strawsberry.svg'},
-    {name: 'SUPPLIES', url: 'headerIcon/tableware.svg'},
-    {name: 'FLOWERS', url: 'headerIcon/flower.svg'}
+    {name: 'All', component: <AllSVG className={styles.size24}/>},
+    {name: 'BUNDLES', component: <BundlesSVG className={styles.size24}/>},
+    {name: 'HERBS', component: <HerbsSVG className={styles.size28}/>},
+    {name: 'VEGETABLES', component: <VegetablesSVG className={styles.size24}/>},
+    {name: 'FRUITS', component: <FruitsSVG className={styles.size28}/>},
+    {name: 'SUPPLIES', component: <SuppliesSVG className={styles.size24}/>},
+    {name: 'FLOWERS', component: <FlowersSVG className={styles.size24}/>}
 ]
 
 interface CategoryProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>{
@@ -23,8 +32,11 @@ export const Category:React.FC<CategoryProps> = ({activeCategory, setActiveCateg
     return (
         <div className={styles.category}>
             {availableCategory.map(((obj, i) => (
-                <ul onClick={() => setActiveCategory(i)} key={obj.name} className={activeCategory === i ? styles.activeCategoryItem : styles.categoryItem}>
-                    <img src={obj.url} alt={obj.name}/>
+                <ul
+                    key={obj.name}
+                    onClick={() => setActiveCategory(i)}
+                    className={activeCategory === i ? styles.activeCategoryItem : styles.categoryItem}>
+                    {obj.component}
                     <li>{obj.name}</li>
                 </ul>
             )))}

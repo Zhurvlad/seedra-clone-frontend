@@ -15,6 +15,7 @@ import {useAppSelector} from '../../redux/hooks';
 import {cartSelectors} from '../../redux/cartSlice';
 import {AppContext} from "../../context/app.context";
 import {IItems} from "../../utils/api/types";
+import {selectUserData} from "../../redux/userSlice";
 
 import MainLogoSVG from './mainLogo.svg'
 import UserLogoSVG from './user.svg'
@@ -25,7 +26,7 @@ import AddedCartSVG from './addedCart.svg'
 import NullCartSVG from './nullCart.svg'
 
 import styles from './Header.module.scss'
-import {selectUserData} from "../../redux/userSlice";
+
 
 
 export const Header: React.FC = () => {

@@ -64,18 +64,18 @@ export const LoadingProduct: React.FC<LoadingProductProps> = ({admin, setAdmin})
             <div className={styles.onLogin}>
                 <h3>Админка</h3>
                 <p>Админка для загрузки товаров</p>
-                <div className={styles.promocode}>
+                <div className={styles.promoCodes}>
                     <p>ImageUrl</p>
                     <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} type="text"
                            placeholder={'ImageUrl'}/>
 
                 </div>
-                <div className={styles.promocode}>
+                <div className={styles.promoCodes}>
                     <p>Price</p>
                     <input value={price} onChange={(e) => setPrice(e.target.value)} type="text" placeholder={'Price'}/>
 
                 </div>
-                <div className={styles.promocode}>
+                <div className={styles.promoCodes}>
                     <p>Description</p>
                     <input value={description} onChange={(e) => setDescription(e.target.value)} type="text"
                            placeholder={'Description'}/>

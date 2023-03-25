@@ -28,7 +28,7 @@ export const Order:React.FC<OrderProps> = ({totalPrice, totalCount}) => {
                 <ArrowBSVG className={styles.arrowB}/>
 
             </div>
-            <div className={styles.promocode}>
+            <div className={styles.promoCodes}>
                 <p>Promocode</p>
                 <input type="text" placeholder={'Promocode'}/>
             </div>
